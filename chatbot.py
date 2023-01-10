@@ -2,6 +2,13 @@ import validator
 
 running = True
 
+def verifyInpStr(inputStr):
+    return validator.checkStringFormat(inputStr)
+
+def answer():
+    #should generate the answer (the best move)
+    return "answer"
+
 #shouldn't start at run but rather first ask you what to do and if you answer start then start
 while running:
     inpString = input("Enter a move or exit to exit: ")
@@ -16,9 +23,3 @@ while running:
     else:
         print("sorry I didn't understand that")
 
-def verifyInpStr(input):
-    return validator.checkStringFormat(input)
-
-def answer():
-    #should generate the answer (the best move)
-    return "answer"
