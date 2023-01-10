@@ -1,3 +1,5 @@
+import validator
+
 running = True
 
 #shouldn't start at run but rather first ask you what to do and if you answer start then start
@@ -11,10 +13,11 @@ while running:
     elif verifyInpStr(inpString):
         print(answer())
         continue
+    else:
+        print("sorry I didn't understand that")
 
 def verifyInpStr(input):
-    #should implement a way to check if the input is valid
-    return True
+    return validator.checkStringFormat(input)
 
 def answer():
     #should generate the answer (the best move)
