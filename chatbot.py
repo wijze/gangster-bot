@@ -1,16 +1,10 @@
 running = True
+
 while running:
-    while True:
-        try:
-            inpString = input("Please enter a number: ")
-            inp = int(inpString)
-        except ValueError:
-            if inpString == "exit":
-                running = False
-                break
-            else:
-                print("Sorry, I didn't understand that.")
-            continue
-        else:
-            print(inp + 1)
-            break
+    inpString = input("Enter a number or exit to exit: ")
+    if inpString.isdigit():
+        print(int(inpString) + 1)
+        continue
+    elif inpString == "exit":
+        running = False
+        print("exited")
