@@ -1,0 +1,23 @@
+import chess
+
+def legal_move(board, move):
+    # Check if the move is legal
+    if move not in board.legal_moves:
+        print("Illegal move")
+        return False
+    else:
+        # Make the move on the board
+        board.push(move)
+        print("Player move:", move)
+        # Use the chess engine to make a countermove
+        countermove = board.suggest(thinking_time=2)
+        board.push(countermove)
+        print("Engine countermove:", countermove)
+        return True
+
+# Example usage
+board = chess.Board()
+move = chess.Move.from_uci("e2e4")
+if legal_move(board, move):
+    print("Board after moves:")
+    print(board)
