@@ -14,7 +14,3 @@ def checkStringFormat(toCheck):
   move_pattern = r'^([Oo0](-[Oo0]){1,2}|[KQRBN]?[a-h]?[1-8]?x?[a-h][1-8](\=[QRBN])?[+#]?(\s(1-0|0-1|1\/2-1\/2))?)$'
   move_regex = re.compile(move_pattern)
   return bool(re.search(move_regex, toCheck))
-
-#https://8bitclassroom.com/2020/08/16/chess-in-regex/
-#https://stackoverflow.com/questions/9012008/pythons-re-return-true-if-string-contains-regex-pattern
-#https://www.ichess.net/blog/chess-notation/

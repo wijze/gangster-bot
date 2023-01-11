@@ -1,0 +1,7 @@
+https://github.com/pychess/pychess/blob/master/lib/pychess/Utils/lutils/lmovegen.py
+(generate al possible moves)
+
+https://8bitclassroom.com/2020/08/16/chess-in-regex/
+https://stackoverflow.com/questions/9012008/pythons-re-return-true-if-string-contains-regex-pattern
+https://www.ichess.net/blog/chess-notation/
+(check for valid chess move format)
