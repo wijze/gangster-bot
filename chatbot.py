@@ -1,25 +1,56 @@
 import validator
 
-running = True
+def main():
+    welcome()
 
 def verifyInpStr(inputStr):
     return validator.checkStringFormat(inputStr)
 
-def answer():
+def answer(move):
     #should generate the answer (the best move)
     return "answer"
 
-#shouldn't start at run but rather first ask you what to do and if you answer start then start
-while running:
-    inpString = input("Enter a move or exit to exit: ")
-    #we should implement a more commands like help and start
-    #we should use a switch thing  for all possible kinds of answers
-    if inpString == "exit":
-        running = False
-        print("exited")
-    elif verifyInpStr(inpString):
-        print(answer())
-        continue
+def printHelp(playing):
+    print("exit to exit")
+    if(playing):
+        print("a chess move to play it")
     else:
-        print("sorry I didn't understand that")
+        print("start to start")
+    
 
+
+def welcome():
+    running = True
+    while running:
+        print("hello I am a (not finished) chat/chess bot")
+        inpString = input("Enter a start to start or help for all commands: ")
+        if inpString == "help":
+            printHelp(False)
+        elif inpString == "exit":
+            running = False
+            print("exited")
+        elif inpString == "start":
+            game()
+            return
+        else:
+            print("sorry I didn't understand that")
+
+
+def game():
+    running = True
+    while running:
+        inpString = input("Enter a move or help for all commands: ")
+
+        if verifyInpStr(inpString):
+            print("moving is not yet implemented")
+            #answer(inpString)
+            #not implemented yet
+        elif inpString=="help":
+            printHelp(True)
+        elif inpString == "exit":
+            running = False
+            print("exited")
+        else:
+            print("sorry I didn't understand that")
+
+main()
