@@ -1,4 +1,5 @@
 https://github.com/pychess/pychess/blob/master/lib/pychess/Utils/lutils/lmovegen.py
+https://github.com/SebLague/Chess-AI/blob/d0832f8f1d32ddfb95525d1f1e5b772a367f272e/Assets/Scripts/Core/MoveGenerator.cs#L6
 (generate al possible moves)
 
 https://8bitclassroom.com/2020/08/16/chess-in-regex/

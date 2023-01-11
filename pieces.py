@@ -9,6 +9,9 @@
 
 #I don't know if it's necessary for all pieces to have their position but I will leave it in for now
 
+
+#genMove functionality has to be adde to each piece (exept nopiece)
+
 class Piece:
   def __init__(self, posX, posY, isWhite):
     self.posX = posX
@@ -24,35 +27,62 @@ class Piece:
 class NoPiece(Piece):
   def __init__(self, posX, posY):
     self.type="NoPiece"
+  
+  def genMoves():
+    return []
 
 class Pon(Piece):
   def __init__(self, posX, posY, isWhite):
     Piece.__init__(posX, posY, isWhite)
-    self.type="Pon"
+    self.type="Pon"  
+  
+  def genMoves():
+    print("genMoves is not implemented yet")
+    return []
 
 class Knight(Piece):
   def __init__(self, posX, posY, isWhite):
     Piece.__init__(posX, posY, isWhite)
     self.type="Knight"
+  
+  def genMoves():
+    print("genMoves is not implemented yet")
+    return []
 
 class Bishop(Piece):
   def __init__(self, posX, posY, isWhite):
     Piece.__init__(posX, posY, isWhite)
     self.type="Bishop"
+  
+  def genMoves():
+    print("genMoves is not implemented yet")
+    return []
 
 class Rook(Piece):
   def __init__(self, posX, posY, isWhite):
     Piece.__init__(posX, posY, isWhite)
     self.type="Rook"
     self.hasMoved = False
+  
+  def genMoves():
+    print("genMoves is not implemented yet")
+    return []
 
 class Queen(Piece):
   def __init__(self, posX, posY, isWhite):
     Piece.__init__(posX, posY, isWhite)
     self.type="Queen"
+  
+  def genMoves():
+    print("genMoves is not implemented yet")
+    return []
 
 class King(Piece):
   def __init__(self, posX, posY, isWhite):
     Piece.__init__(posX, posY, isWhite)
     self.type="King"
     self.hasMoved = False
+  
+  def genMoves():
+    print("genMoves is not implemented yet")
+    return []

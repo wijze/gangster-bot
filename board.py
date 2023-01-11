@@ -28,6 +28,9 @@ class Board:
         string += self.array[x * 8 + y].IAM() + " "
       print(string)
 
+  def getSquare(x, y):
+    return self.array[x * 8 + y]
+
 
 def emptyBoard():
   arr = []
@@ -35,8 +38,6 @@ def emptyBoard():
     for y in range(8):
       arr.append(pieces.NoPiece(x, y))
   return arr
-
-
 
 #for testing, showes the board from the array
 #board = Board()
