@@ -35,6 +35,7 @@ class Piece:
 class NoPiece(Piece):
   def __init__(self, posX, posY):
     self.type = "NoPiece"
+    self.isWhite = False
 
   def genMoves(self):
     return []
@@ -45,6 +46,7 @@ class Pon(Piece):
     Piece.__init__(posX, posY, isWhite, board)
     self.type = "Pon"
     self.hasMoved = False
+    self.justDoubleMoved = False
 
   def genMoves(self):
     moves = []
@@ -53,24 +55,40 @@ class Pon(Piece):
       if self.posY < 7:
         if self.board.getSquare(self.posX, self.posY + 1).type == "NoPiece":
           moves.append(self.addMove(self.posX, self.posY + 1))
+          # double if in it hasn't moved yet
           if not self.hasMoved and self.board.getSquare(self.posX, self.posY + 2).type == "NoPiece" and self.posY==1:
             moves.append(self.addMove(self.posX, self.posY + 2))
+        # taking
         if self.board.getSquare(self.posX - 1, self.posY + 1).type != "NoPiece" and not self.board.getSquare(self.posX - 1, self.posY + 1).isWhite:
           moves.append(self.addMove(self.posX - 1, self.posY + 1))
         if self.board.getSquare(self.posX + 1, self.posY + 1).type != "NoPiece" and not self.board.getSquare(self.posX + 1, self.posY + 1).isWhite:
           moves.append(self.addMove(self.posX + 1, self.posY + 1))
-        # add en passant
+        # en passant
+        if self.board.getSquare(self.posX-1, self.posY).type == "Pon" and not self.board.getSquare(self.posX-1, self.posY).isWhite:
+          if self.board.getSquare(self.posX-1, self.posY).justDoubleMoved:
+            moves.append(self.addMove(self.posX - 1, self.posY + 1))
+        if self.board.getSquare(self.posX+1, self.posY).type == "Pon" and not self.board.getSquare(self.posX+1, self.posY).isWhite:
+          if self.board.getSquare(self.posX+1, self.posY).justDoubleMoved:
+            moves.append(self.addMove(self.posX + 1, self.posY + 1))
     else:
       if self.posY > 0:
         if self.board.getSquare(self.posX, self.posY + 1).type == "NoPiece":
           moves.append(self.addMove(self.posX, self.posY - 1))
+          # double if in it hasn't moved yet
           if not self.hasMoved and self.board.getSquare(self.posX, self.posY - 2).type == "NoPiece" and self.posY==6:
             moves.append(self.addMove(self.posX, self.posY - 2))
+        # taking
         if self.board.getSquare(self.posX - 1, self.posY - 1).type != "NoPiece" and self.board.getSquare(self.posX - 1, self.posY - 1).isWhite:
           moves.append(self.addMove(self.posX - 1, self.posY + 1))
         if self.board.getSquare(self.posX + 1, self.posY - 1).type != "NoPiece" and self.board.getSquare(self.posX + 1, self.posY - 1).isWhite:
           moves.append(self.addMove(self.posX + 1, self.posY - 1))
-        # add en passant
+        # en passant
+        if self.board.getSquare(self.posX - 1, self.posY).type == "Pon" and self.board.getSquare(self.posX - 1,self.posY).isWhite:
+          if self.board.getSquare(self.posX - 1, self.posY).justDoubleMoved:
+            moves.append(self.addMove(self.posX - 1, self.posY - 1))
+        if self.board.getSquare(self.posX + 1, self.posY).type == "Pon" and self.board.getSquare(self.posX + 1,self.posY).isWhite:
+          if self.board.getSquare(self.posX + 1, self.posY).justDoubleMoved:
+            moves.append(self.addMove(self.posX + 1, self.posY - 1))
     return moves
 
 
