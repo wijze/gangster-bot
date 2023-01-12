@@ -55,7 +55,7 @@ class Pon(Piece):
       if self.posY < 7:
         if self.board.getSquare(self.posX, self.posY + 1).type == "NoPiece":
           moves.append(self.addMove(self.posX, self.posY + 1))
-          # double if in it hasn't moved yet
+          # double if it hasn't moved yet
           if not self.hasMoved and self.board.getSquare(self.posX, self.posY + 2).type == "NoPiece" and self.posY==1:
             moves.append(self.addMove(self.posX, self.posY + 2))
         # taking
@@ -74,7 +74,7 @@ class Pon(Piece):
       if self.posY > 0:
         if self.board.getSquare(self.posX, self.posY + 1).type == "NoPiece":
           moves.append(self.addMove(self.posX, self.posY - 1))
-          # double if in it hasn't moved yet
+          # double if it hasn't moved yet
           if not self.hasMoved and self.board.getSquare(self.posX, self.posY - 2).type == "NoPiece" and self.posY==6:
             moves.append(self.addMove(self.posX, self.posY - 2))
         # taking
@@ -96,8 +96,13 @@ class Knight(Piece):
   def __init__(self, posX, posY, isWhite, board):
     Piece.__init__(posX, posY, isWhite, board)
     self.type = "Knight"
+      self.relative_moves=[[2,1],[1,2],[-1,2],[-2,1],[-2,-1],[-1,-2],[1,-2],[2,-1]]
 
   def genMoves(self):
+    for move in self.relative_moves:
+      if not (self.posY+move[1]>7 or self.posY-move[1] or self.posX+move[0]>7 or self.posX+move[0]<0):
+        print("next to implement")
+        #add checking for pieces
     print("genMoves is not implemented yet")
     moves = []
     return moves
