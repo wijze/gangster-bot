@@ -18,27 +18,43 @@ import pieces
 class Board:
   def __init__(self):
     print("constructor")
-    self.array = emptyBoard()
+    self.array = emptyBoard(self)
     #should instead implement starting posistion
   
-  def Log(self):
-    for x in range(8):
+  def Log(self, fromWhite):
+    for y in range(8):
       string = ""
-      for y in range(8):
-        string += self.array[x * 8 + y].IAM() + " "
+      for x in range(8):
+        if(fromWhite):
+          string += self.array[x + (7-y) * 8].IAM() + " "
+        else:
+          string += self.array[x + y * 8].IAM() + " "
       print(string)
 
-  def getSquare(x, y): #warning in range 0-7!!
-    return self.array[x * 8 + y]
+  def getSquare(self, x, y): #warning in range 0-7!!
+    return self.array[x + y * 8]
 
 
-def emptyBoard():
+def emptyBoard(board):
   arr = []
   for x in range(8):
     for y in range(8):
-      arr.append(pieces.NoPiece(x, y))
+      arr.append(pieces.NoPiece(x, y, board))
   return arr
 
-#for testing, showes the board from the array
+#enable code below this to test:
+#creates an emty board
+#adds a piece (you can change the piece to test different pieces) to a specified debug square
+#you can also change the square to test different squares
+#and then prints the moves that piece can make (not yet implemented for all pieces)
+#and then prints the board
+
+#the code:
+
 #board = Board()
-#board.Log()
+#debugSquareX = 5
+#debugSquareY = 1
+#debugSquare = debugSquareX * 8 + debugSquareX
+#board.array[debugSquare] = pieces.Knight(debugSquareX, debugSquareY, True, board)
+#print(board.array[debugSquare].genMoves())
+#board.Log(True)

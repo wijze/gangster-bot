@@ -33,9 +33,11 @@ class Piece:
 
 
 class NoPiece(Piece):
-  def __init__(self, posX, posY):
+  def __init__(self, posX, posY, board):
     self.type = "NoPiece"
     self.isWhite = False
+    self.posX = posX
+    self.posY = posY
 
   def genMoves(self):
     return []
@@ -43,14 +45,13 @@ class NoPiece(Piece):
 
 class Pon(Piece):
   def __init__(self, posX, posY, isWhite, board):
-    Piece.__init__(posX, posY, isWhite, board)
+    Piece.__init__(self, posX, posY, isWhite, board)
     self.type = "Pon"
     self.hasMoved = False
     self.justDoubleMoved = False
 
   def genMoves(self):
     moves = []
-    print("genMoves is not implemented yet")
     if self.isWhite:
       if self.posY < 7:
         if self.board.getSquare(self.posX, self.posY + 1).type == "NoPiece":
@@ -94,23 +95,27 @@ class Pon(Piece):
 
 class Knight(Piece):
   def __init__(self, posX, posY, isWhite, board):
-    Piece.__init__(posX, posY, isWhite, board)
+    Piece.__init__(self, posX, posY, isWhite, board)
     self.type = "Knight"
-      self.relative_moves=[[2,1],[1,2],[-1,2],[-2,1],[-2,-1],[-1,-2],[1,-2],[2,-1]]
+    self.relative_moves=[[2,1],[1,2],[-1,2],[-2,1],[-2,-1],[-1,-2],[1,-2],[2,-1]]
 
   def genMoves(self):
-    for move in self.relative_moves:
-      if not (self.posY+move[1]>7 or self.posY-move[1] or self.posX+move[0]>7 or self.posX+move[0]<0):
-        print("next to implement")
-        #add checking for pieces
-    print("genMoves is not implemented yet")
     moves = []
+    for move in self.relative_moves:
+      if not (self.posY+move[1]>7 or self.posY+move[1]<0 or self.posX+move[0]>7 or self.posX+move[0]<0):
+        if self.board.getSquare(self.posX+move[0], self.posY+move[1]).type == "NoPiece":
+          #white
+          if self.isWhite and not self.board.getSquare(self.posX+move[0], self.posY+move[1]).isWhite:
+            moves.append(self.addMove(self.posX+move[0], self.posY+move[1]))
+          #black
+          if not self.isWhite and self.board.getSquare(self.posX+move[0], self.posY+move[1]).isWhite:
+            moves.append(self.addMove(self.posX+move[0], self.posY+move[1]))
     return moves
 
 
 class Bishop(Piece):
   def __init__(self, posX, posY, isWhite, board):
-    Piece.__init__(posX, posY, isWhite, board)
+    Piece.__init__(self, posX, posY, isWhite, board)
     self.type = "Bishop"
 
   def genMoves(self):
@@ -121,7 +126,7 @@ class Bishop(Piece):
 
 class Rook(Piece):
   def __init__(self, posX, posY, isWhite, board):
-    Piece.__init__(posX, posY, isWhite, board)
+    Piece.__init__(self, posX, posY, isWhite, board)
     self.type = "Rook"
     self.hasMoved = False
 
@@ -133,7 +138,7 @@ class Rook(Piece):
 
 class Queen(Piece):
   def __init__(self, posX, posY, isWhite, board):
-    Piece.__init__(posX, posY, isWhite, board)
+    Piece.__init__(self, posX, posY, isWhite, board)
     self.type = "Queen"
 
   def genMoves(self):
@@ -144,7 +149,7 @@ class Queen(Piece):
 
 class King(Piece):
   def __init__(self, posX, posY, isWhite, board):
-    Piece.__init__(posX, posY, isWhite, board)
+    Piece.__init__(self, posX, posY, isWhite, board)
     self.type = "King"
     self.hasMoved = False
 
