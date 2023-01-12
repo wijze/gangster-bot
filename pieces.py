@@ -7,13 +7,11 @@
 #the rook and king class have a special variable for if they have moved for castling
 #the nopiece class has only its position
 
-#I don't know if it's necessary for all pieces to have their position but I will leave it in for now
-
 
 #genMove functionality has to be adde to each piece (exept nopiece)
 
 class Piece:
-  def __init__(self, posX, posY, isWhite):
+  def __init__(self, posX, posY, isWhite, board):
     self.posX = posX
     self.posY = posY
     self.isWhite = isWhite
@@ -23,6 +21,14 @@ class Piece:
 
   def Move(self):
     print("move is not implemented yet")
+
+  def addMove(self, toX, toY):
+    return {
+      "fromX": self.posX,
+      "fromY": self.posY,
+      "toX": toX,
+      "toY": toY
+    }
 
 class NoPiece(Piece):
   def __init__(self, posX, posY):
@@ -34,11 +40,25 @@ class NoPiece(Piece):
 class Pon(Piece):
   def __init__(self, posX, posY, isWhite):
     Piece.__init__(posX, posY, isWhite)
-    self.type="Pon"  
+    self.type="Pon"
+    self.hasMoved = False
   
   def genMoves():
+    moves = []
     print("genMoves is not implemented yet")
-    return []
+    if(self.isWhite):
+      if(not(self.posX >= 7)):
+        if(board.getSquare(self.posX, self.posY+1).type == "NoPiece"):
+          moves.append(self.addMove(self.posX, self.posY+1))
+          #add double step if not has moved
+        #add taking
+    else:
+      if(not(self.posX <= 1)):
+        if(board.getSquare(self.posX, self.posY+1).type == "NoPiece"):
+          moves.append(self.addMove(self.posX, self.posY-1))
+          #add double step if not has moved
+        #add taking
+    return moves
 
 class Knight(Piece):
   def __init__(self, posX, posY, isWhite):
@@ -47,7 +67,8 @@ class Knight(Piece):
   
   def genMoves():
     print("genMoves is not implemented yet")
-    return []
+    moves = []
+    return moves
 
 class Bishop(Piece):
   def __init__(self, posX, posY, isWhite):
@@ -56,7 +77,8 @@ class Bishop(Piece):
   
   def genMoves():
     print("genMoves is not implemented yet")
-    return []
+    moves = []
+    return moves
 
 class Rook(Piece):
   def __init__(self, posX, posY, isWhite):
@@ -66,7 +88,8 @@ class Rook(Piece):
   
   def genMoves():
     print("genMoves is not implemented yet")
-    return []
+    moves = []
+    return moves
 
 class Queen(Piece):
   def __init__(self, posX, posY, isWhite):
@@ -75,7 +98,8 @@ class Queen(Piece):
   
   def genMoves():
     print("genMoves is not implemented yet")
-    return []
+    moves = []
+    return moves
 
 class King(Piece):
   def __init__(self, posX, posY, isWhite):
@@ -85,4 +109,5 @@ class King(Piece):
   
   def genMoves():
     print("genMoves is not implemented yet")
-    return []
+    moves = []
+    return moves

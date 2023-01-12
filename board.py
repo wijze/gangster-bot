@@ -28,7 +28,7 @@ class Board:
         string += self.array[x * 8 + y].IAM() + " "
       print(string)
 
-  def getSquare(x, y):
+  def getSquare(x, y): #warning in range 0-7!!
     return self.array[x * 8 + y]
 
 
