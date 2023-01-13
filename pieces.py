@@ -97,7 +97,7 @@ class Knight(Piece):
   def __init__(self, posX, posY, isWhite, board):
     Piece.__init__(self, posX, posY, isWhite, board)
     self.type = "Knight"
-    self.relative_moves=[[2,1],[1,2],[-1,2],[-2,1],[-2,-1],[-1,-2],[1,-2],[2,-1]]
+    self.relative_moves = [[2, 1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [-1, -2], [1, -2], [2, -1]]
 
   def genMoves(self):
     moves = []
@@ -131,8 +131,9 @@ class Rook(Piece):
     self.hasMoved = False
 
   def genMoves(self):
-    print("genMoves is not implemented yet")
-    moves = []
+    moves = genMovesSlider([[1, 0], [0, 1], [-1, 0], [0, -1]], 7, [self.posX, self.posY], self.board)
+    for i in range(len(moves)):
+      moves[i] = self.addMove(moves[i][0], moves[i][1])
     return moves
 
 
@@ -157,3 +158,18 @@ class King(Piece):
     print("genMoves is not implemented yet")
     moves = []
     return moves
+
+
+def genMovesSlider(directions, distance, position, board):
+  moves = []
+  for direction in directions:
+    for i in range(distance):
+      toX = direction[0]*(i+1)+position[0]
+      toY = direction[1]*(i+1)+position[1]
+      if toX < 7 and toY < 7 and toX >= 0 and toY >= 0:
+        if board.getSquare(toX, toY).type == "NoPiece":
+          moves.append([toX, toY])
+        else:
+          break
+  return moves
+
