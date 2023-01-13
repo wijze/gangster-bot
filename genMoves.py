@@ -37,3 +37,8 @@ def genMoves(board, recursivelyCalled, whiteToPlay):
     return False
   else:
     return moves
+
+
+def compareMoves(move1, move2):
+  if move1.fromX==move2.fromX and move1.fromY==move2.fromY and move1.toX==move2.toX and move1.toY==move2.toY: return True
+  else: return False
