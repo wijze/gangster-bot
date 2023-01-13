@@ -53,11 +53,10 @@ def emptyBoard(board):
 
 # the code:
 
-board = Board()
-debugSquareX = 4
-debugSquareY = 0
-debugSquare = debugSquareY * 7 + debugSquareX
-board.array[0] = pieces.Rook(0, 0, True, board)
-board.array[debugSquare] = pieces.King(debugSquareX, debugSquareY, True, board)
-print(board.array[debugSquare].genMoves())
-board.Log(True)
+# board = Board()
+# debugSquareX = 4
+# debugSquareY = 0
+# debugSquare = debugSquareY * 7 + debugSquareX
+# board.array[debugSquare] = pieces.King(debugSquareX, debugSquareY, True, board)
+# print(board.array[debugSquare].genMoves())
+# board.Log(True)

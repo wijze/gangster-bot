@@ -119,7 +119,7 @@ class Bishop(Piece):
     self.type = "Bishop"
 
   def genMoves(self):
-    moves = genMovesSlider([[1, 1], [1, -1], [-1, -1], [-1, 1]], 7, [self.posX, self.posY], self.board)
+    moves = genMovesSlider([[1, 1], [1, -1], [-1, -1], [-1, 1]], 7, [self.posX, self.posY], self.isWhite, self.board)
     for i in range(len(moves)):
       moves[i] = self.addMove(moves[i][0], moves[i][1])
     return moves
@@ -132,7 +132,7 @@ class Rook(Piece):
     self.hasMoved = False
 
   def genMoves(self):
-    moves = genMovesSlider([[1, 0], [0, 1], [-1, 0], [0, -1]], 7, [self.posX, self.posY], self.board)
+    moves = genMovesSlider([[1, 0], [0, 1], [-1, 0], [0, -1]], 7, [self.posX, self.posY], self.isWhite, self.board)
     for i in range(len(moves)):
       moves[i] = self.addMove(moves[i][0], moves[i][1])
     return moves
@@ -144,7 +144,7 @@ class Queen(Piece):
     self.type = "Queen"
 
   def genMoves(self):
-    moves = genMovesSlider([[1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1,1], [0, 1]], 7, [self.posX, self.posY], self.board)
+    moves = genMovesSlider([[1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1,1], [0, 1]], 7, [self.posX, self.posY], self.isWhite, self.board)
     for i in range(len(moves)):
       moves[i] = self.addMove(moves[i][0], moves[i][1])
     return moves
@@ -157,7 +157,7 @@ class King(Piece):
     self.hasMoved = False
 
   def genMoves(self):
-    moves = genMovesSlider([[1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1,1], [0, 1]], 1, [self.posX, self.posY], self.board)
+    moves = genMovesSlider([[1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1,1], [0, 1]], 1, [self.posX, self.posY], self.isWhite, self.board)
     for i in range(len(moves)):
       moves[i] = self.addMove(moves[i][0], moves[i][1])
     
@@ -191,7 +191,8 @@ class King(Piece):
     return moves
 
 
-def genMovesSlider(directions, distance, position, board):
+# sliders are pieces that can move different amounts in the directions they can go
+def genMovesSlider(directions, distance, position, isWhite, board):
   moves = []
   for direction in directions:
     for i in range(distance):
@@ -201,6 +202,11 @@ def genMovesSlider(directions, distance, position, board):
         if board.getSquare(toX, toY).type == "NoPiece":
           moves.append([toX, toY])
         else:
-          break
+          if (isWhite and (not board.getSquare(toX, toY).isWhite)) or ((not isWhite) and board.getSquare(toX, toY).isWhite):
+            #take
+            moves.append([toX, toY])
+            break
+          else:
+            break
   return moves
 
