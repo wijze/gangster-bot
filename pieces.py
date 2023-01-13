@@ -166,7 +166,7 @@ def genMovesSlider(directions, distance, position, board):
     for i in range(distance):
       toX = direction[0]*(i+1)+position[0]
       toY = direction[1]*(i+1)+position[1]
-      if toX < 7 and toY < 7 and toX >= 0 and toY >= 0:
+      if toX <= 7 and toY <= 7 and toX >= 0 and toY >= 0:
         if board.getSquare(toX, toY).type == "NoPiece":
           moves.append([toX, toY])
         else:
