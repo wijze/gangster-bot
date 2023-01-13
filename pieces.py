@@ -119,8 +119,9 @@ class Bishop(Piece):
     self.type = "Bishop"
 
   def genMoves(self):
-    print("genMoves is not implemented yet")
-    moves = []
+    moves = genMovesSlider([[1, 1], [1, -1], [-1, -1], [-1, 1]], 7, [self.posX, self.posY], self.board)
+    for i in range(len(moves)):
+      moves[i] = self.addMove(moves[i][0], moves[i][1])
     return moves
 
 
@@ -143,8 +144,9 @@ class Queen(Piece):
     self.type = "Queen"
 
   def genMoves(self):
-    print("genMoves is not implemented yet")
-    moves = []
+    moves = genMovesSlider([[1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1,1], [0, 1]], 7, [self.posX, self.posY], self.board)
+    for i in range(len(moves)):
+      moves[i] = self.addMove(moves[i][0], moves[i][1])
     return moves
 
 
@@ -155,8 +157,37 @@ class King(Piece):
     self.hasMoved = False
 
   def genMoves(self):
-    print("genMoves is not implemented yet")
-    moves = []
+    moves = genMovesSlider([[1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1,1], [0, 1]], 1, [self.posX, self.posY], self.board)
+    for i in range(len(moves)):
+      moves[i] = self.addMove(moves[i][0], moves[i][1])
+    
+    #castling: add castling
+    if self.isWhite:
+      if (not self.hasMoved) and self.board.getSquare(self.posX-4, self.posY).type == "Rook":
+        if not self.board.getSquare(self.posX-4, self.posY).hasMoved:
+          if self.board.getSquare(self.posX-1, self.posY).type == "NoPiece" and self.board.getSquare(self.posX-2, self.posY).type == "NoPiece" and self.board.getSquare(self.posX-3, self.posY).type == "NoPiece":
+            move = self.addMove(self.posX-2, self.posY)
+            move["castling"] = True
+            moves.append(move)
+      if (not self.hasMoved) and self.board.getSquare(self.posX+3, self.posY).type == "Rook":
+        if not self.board.getSquare(self.posX+3, self.posY).hasMoved:
+          if self.board.getSquare(self.posX+1, self.posY).type == "NoPiece" and self.board.getSquare(self.posX+2, self.posY).type == "NoPiece":
+            move = self.addMove(self.posX+2, self.posY)
+            move["castling"] = True
+            moves.append(move)
+    else:
+      if (not self.hasMoved) and self.board.getSquare(self.posX+4, self.posY).type == "Rook":
+        if not self.board.getSquare(self.posX+4, self.posY).hasMoved:
+          if self.board.getSquare(self.posX+1, self.posY).type == "NoPiece" and self.board.getSquare(self.posX+2, self.posY).type == "NoPiece" and self.board.getSquare(self.posX+3, self.posY).type == "NoPiece":
+            move = self.addMove(self.posX+2, self.posY)
+            move.castling = True
+            moves.append(move)
+      if (not self.hasMoved) and self.board.getSquare(self.posX-3, self.posY).type == "Rook":
+        if not self.board.getSquare(self.posX-3, self.posY).hasMoved:
+          if self.board.getSquare(self.posX-1, self.posY).type == "NoPiece" and self.board.getSquare(self.posX-2, self.posY).type == "NoPiece":
+            move = self.addMove(self.posX-2, self.posY)
+            move.castling = True
+            moves.append(move)
     return moves
 
 

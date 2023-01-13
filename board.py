@@ -17,31 +17,31 @@ import pieces
 # enable the code at the bottom of the file to see the board
 
 class Board:
-    def __init__(self):
-        print("constructor")
-        self.array = emptyBoard(self)
-        # should instead implement starting position
+  def __init__(self):
+    print("constructor")
+    self.array = emptyBoard(self)
+    # should instead implement starting position
 
-    def Log(self, fromWhite):
-        for y in range(8):
-            string = ""
-            for x in range(8):
-                if not fromWhite:
-                    string += self.array[x + ((7 - y) * 7)].IAM() + " "
-                else:
-                    string += self.array[x + (y * 7)].IAM() + " "
-            print(string)
+  def Log(self, fromWhite):
+    for y in range(8):
+      string = ""
+      for x in range(8):
+        if not fromWhite:
+          string += self.array[x + ((7 - y) * 7)].IAM() + " "
+        else:
+          string += self.array[x + (y * 7)].IAM() + " "
+      print(string)
 
-    def getSquare(self, x, y):  # warning in range 0-7!!
-        return self.array[x + (y * 7)]
+  def getSquare(self, x, y):  # warning in range 0-7!!
+    return self.array[x + (y * 7)]
 
 
 def emptyBoard(board):
-    arr = []
-    for x in range(8):
-        for y in range(8):
-            arr.append(pieces.NoPiece(x, y, board))
-    return arr
+  arr = []
+  for x in range(8):
+    for y in range(8):
+      arr.append(pieces.NoPiece(x, y, board))
+  return arr
 
 
 # enable code below this to test:
@@ -53,10 +53,11 @@ def emptyBoard(board):
 
 # the code:
 
-#board = Board()
-#debugSquareX = 5
-#debugSquareY = 1
-#debugSquare = debugSquareY * 7 + debugSquareX
-#board.array[debugSquare] = pieces.Rook(debugSquareX, debugSquareY, False, board)
-#print(board.array[debugSquare].genMoves())
-#board.Log(True)
+board = Board()
+debugSquareX = 4
+debugSquareY = 0
+debugSquare = debugSquareY * 7 + debugSquareX
+board.array[0] = pieces.Rook(0, 0, True, board)
+board.array[debugSquare] = pieces.King(debugSquareX, debugSquareY, True, board)
+print(board.array[debugSquare].genMoves())
+board.Log(True)
