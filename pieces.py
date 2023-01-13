@@ -67,10 +67,14 @@ class Pon(Piece):
         # en passant
         if self.board.getSquare(self.posX-1, self.posY).type == "Pon" and not self.board.getSquare(self.posX-1, self.posY).isWhite:
           if self.board.getSquare(self.posX-1, self.posY).justDoubleMoved:
-            moves.append(self.addMove(self.posX - 1, self.posY + 1))
+            move = self.addMove(self.posX - 1, self.posY + 1)
+            move["en passant"] = True
+            moves.append(move)
         if self.board.getSquare(self.posX+1, self.posY).type == "Pon" and not self.board.getSquare(self.posX+1, self.posY).isWhite:
           if self.board.getSquare(self.posX+1, self.posY).justDoubleMoved:
-            moves.append(self.addMove(self.posX + 1, self.posY + 1))
+            move = self.addMove(self.posX - 1, self.posY + 1)
+            move["en passant"] = True
+            moves.append(move)
     else:
       if self.posY > 0:
         if self.board.getSquare(self.posX, self.posY + 1).type == "NoPiece":
@@ -86,10 +90,14 @@ class Pon(Piece):
         # en passant
         if self.board.getSquare(self.posX - 1, self.posY).type == "Pon" and self.board.getSquare(self.posX - 1,self.posY).isWhite:
           if self.board.getSquare(self.posX - 1, self.posY).justDoubleMoved:
-            moves.append(self.addMove(self.posX - 1, self.posY - 1))
+            move = self.addMove(self.posX - 1, self.posY + 1)
+            move["en passant"] = True
+            moves.append(move)
         if self.board.getSquare(self.posX + 1, self.posY).type == "Pon" and self.board.getSquare(self.posX + 1,self.posY).isWhite:
           if self.board.getSquare(self.posX + 1, self.posY).justDoubleMoved:
-            moves.append(self.addMove(self.posX + 1, self.posY - 1))
+            move = self.addMove(self.posX - 1, self.posY + 1)
+            move["en passant"] = True
+            moves.append(move)
     return moves
 
 

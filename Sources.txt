@@ -6,3 +6,6 @@ https://8bitclassroom.com/2020/08/16/chess-in-regex/
 https://stackoverflow.com/questions/9012008/pythons-re-return-true-if-string-contains-regex-pattern
 https://www.ichess.net/blog/chess-notation/
 (check for valid chess move format)
+
+https://www.youtube.com/watch?v=4qwFwdCcgac
+(tutorial)
