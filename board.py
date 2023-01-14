@@ -18,7 +18,6 @@ import pieces
 class Board:
   def __init__(self):
     self = StartingBoard(self)
-    self.Log(True)
 
   def Make_move(self, move, apply):
     # move in format {fromX, fromY, toX toY} and if tehy have properties for castling and en passant
@@ -74,21 +73,21 @@ class Board:
     if not fromWhite:
       string = ""
       for i in range (64):
-        string+=str(self.array[i].isWhite)+" "
+        string+=str(self.array[i].type)+" "
         if (i+1)%8 == 0 and i!=0:
           print(string)
           string=""
     else:
       string = ""
       for i in range (64):
-        string+=str(self.array[63-i].isWhite)+" "
+        string+=str(self.array[63-i].type)+" "
         if (i+1)%8 == 0 and i!=0:
           print(string)
           string=""
     
 
   def getSquare(self, x, y):  # warning in range 0-7!!
-    return self.array[x + (y * 7)]
+    return self.array[x + (y * 8)]
 
 
 def emptyBoard(board):
@@ -124,9 +123,10 @@ def StartingBoard(board):
 # the code:
 
 # board = Board()
-# debugSquareX = 4
-# debugSquareY = 0
+# debugSquareX = 0
+# debugSquareY = 1
 # debugSquare = debugSquareY * 7 + debugSquareX
-# board.array[debugSquare] = pieces.King(debugSquareX, debugSquareY, True, board)
-# print(board.array[debugSquare].genMoves())
+# board.array[debugSquare] = pieces.Pon(debugSquareX, debugSquareY, True, board)
+
 # board.Log(True)
+# print(board.array[debugSquare].genMoves())

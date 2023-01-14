@@ -1,7 +1,9 @@
 def genMoves(board, recursivelyCalled, whiteToPlay):
   moves = []
   #generate all possible moves (not accounting for check)
+  i=0
   for piece in board.array:
+    i+=1
     if piece.isWhite == whiteToPlay:
       moves += piece.genMoves()
 
@@ -37,6 +39,7 @@ def genMoves(board, recursivelyCalled, whiteToPlay):
   if recursivelyCalled:
     return False
   else:
+    print(moves)
     return moves
 
 
