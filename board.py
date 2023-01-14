@@ -18,8 +18,7 @@ import pieces
 class Board:
   def __init__(self):
     print("constructor")
-    self.array = emptyBoard(self)
-    # should instead implement starting position
+    self = StartingBoard(self)
 
   def Make_move(self, move, apply):
     # move in format {fromX, fromY, toX toY} and if tehy have properties for castling and en passant
@@ -92,6 +91,21 @@ def emptyBoard(board):
       arr.append(pieces.NoPiece(x, y, board))
   return arr
 
+def StartingBoard(board):
+  board.array = [
+    pieces.Rook(0,0,True,board),pieces.Knight(1,0,True,board),pieces.Bishop(2,0,True,board),pieces.Queen(3,0,True,board),pieces.King(4,0,True,board),pieces.Bishop(5,0,True,board),pieces.Knight(6,0,True,board),pieces.Rook(7,0,True,board),
+    pieces.Pon(0,1,True,board),pieces.Pon(1,1,True,board),pieces.Pon(2,1,True,board),pieces.Pon(3,1,True,board),pieces.Pon(4,1,True,board),pieces.Pon(5,1,True,board),pieces.Pon(6,1,True,board),pieces.Pon(7,1,True,board),
+    pieces.NoPiece(0,2,board),pieces.NoPiece(1,2,board),pieces.NoPiece(2,2,board),pieces.NoPiece(3,2,board),pieces.NoPiece(4,2,board),pieces.NoPiece(5,2,board),pieces.NoPiece(6,2,board),pieces.NoPiece(7,2,board),
+    pieces.NoPiece(0,3,board),pieces.NoPiece(1,3,board),pieces.NoPiece(2,3,board),pieces.NoPiece(3,3,board),pieces.NoPiece(4,3,board),pieces.NoPiece(5,3,board),pieces.NoPiece(6,3,board),pieces.NoPiece(7,3,board),
+    pieces.NoPiece(0,4,board),pieces.NoPiece(1,4,board),pieces.NoPiece(2,4,board),pieces.NoPiece(3,4,board),pieces.NoPiece(4,4,board),pieces.NoPiece(5,4,board),pieces.NoPiece(6,4,board),pieces.NoPiece(7,4,board),
+    pieces.NoPiece(0,5,board),pieces.NoPiece(1,5,board),pieces.NoPiece(2,5,board),pieces.NoPiece(3,5,board),pieces.NoPiece(4,5,board),pieces.NoPiece(5,5,board),pieces.NoPiece(6,5,board),pieces.NoPiece(7,5,board),
+    pieces.Pon(0,6,False,board),pieces.Pon(1,6,False,board),pieces.Pon(2,6,False,board),pieces.Pon(3,6,False,board),pieces.Pon(4,6,False,board),pieces.Pon(5,6,False,board),pieces.Pon(6,6,False,board),pieces.Pon(7,6,False,board),
+    pieces.Rook(0,7,False,board),pieces.Knight(1,7,False,board),pieces.Bishop(2,7,False,board),pieces.Queen(3,7,False,board),pieces.King(4,7,False,board),pieces.Bishop(5,7,False,board),pieces.Knight(6,7,False,board),pieces.Rook(7,7,False,board)
+  ]
+
+  for piece in board.array:
+    piece.board = board
+  return board
 
 # enable code below this to test:
 # creates an empty board

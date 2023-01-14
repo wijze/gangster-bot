@@ -10,7 +10,7 @@ def genMoves(board, recursivelyCalled, whiteToPlay):
     # check for check by generating all moves of the enemy and checking if they are taking the king
     # should only do it in depth zero, not in recursive call 
     if not recursivelyCalled:
-      local_board = board.makeMove(moves[i], False)
+      local_board = board.Make_move(moves[i], False)
       #checking for check, returns true if in check
       inCheck = genMoves(local_board, True, not whiteToPlay)
       if inCheck:

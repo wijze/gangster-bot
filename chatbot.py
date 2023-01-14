@@ -1,5 +1,7 @@
 import validator
 
+import chessGame as Game
+
 def main():
     welcome()
 
@@ -37,14 +39,18 @@ def welcome():
 
 
 def game():
+    game = Game.Game()
     running = True
     while running:
         inpString = input("Enter a move or help for all commands: ")
 
         if verifyInpStr(inpString):
-            print("moving is not yet implemented")
-            #answer(inpString)
-            #not implemented yet
+            #returns false if not in correct format
+            parcedMove = validator.parce_inp_string(inpString)
+            if parcedMove:
+                game.playMove(parcedMove)
+                game.AI_move()
+            else: continue
         elif inpString=="help":
             printHelp(True)
         elif inpString == "exit":
@@ -52,5 +58,6 @@ def game():
             print("exited")
         else:
             print("sorry I didn't understand that")
+        game.board.Log(True)
 
 main()
