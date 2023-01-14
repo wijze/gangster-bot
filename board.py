@@ -17,16 +17,16 @@ import pieces
 
 class Board:
   def __init__(self):
-    print("constructor")
     self = StartingBoard(self)
+    self.Log(True)
 
   def Make_move(self, move, apply):
     # move in format {fromX, fromY, toX toY} and if tehy have properties for castling and en passant
 
     # physically move piece and set old place to no piece
     copy_of_board = self
-    copy_of_board.array[move.toX + (move.toY * 7)] = copy_of_board.array[move.fromX + (move.fromY * 7)]
-    copy_of_board.array[move.fromX + (move.fromY * 7)] = pieces.NoPiece(move.fromX, move.fromY, copy_of_board)
+    copy_of_board.array[move["toX"] + (move["toY"] * 7)] = copy_of_board.array[move["fromX"] + (move["fromY"] * 7)]
+    copy_of_board.array[move["fromX"] + (move["fromY"] * 7)] = pieces.NoPiece(move["fromX"], move["fromY"], copy_of_board)
 
     #clearing just double moved (for en passant) of pons
     for i in range(len(copy_of_board.array)):
@@ -34,34 +34,34 @@ class Board:
         copy_of_board.array[i].justDoubleMoved == False
 
     #checking for en passant and castling and applying other things that happen then
-    if move["castling"]:
+    if "castling" in move:
       #you can see wich site the rook was by checking the direction of the move of the king
-      if move.fromX-move.toX > 0:
+      if move["fromX"]-move["toX"] > 0:
         copy_of_board.Make_move({
           "fromX": 7,
-          "fromY": move.fromY,
-          "toX": move.toX-1,
-          "toY": move.fromY
+          "fromY": move["fromY"],
+          "toX": move["toX"]-1,
+          "toY": move["fromY"]
         }, True)
       else:
         copy_of_board.Make_move({
           "fromX": 0,
-          "fromY": move.fromY,
-          "toX": move.toX+1,
-          "toY": move.fromY
+          "fromY": move["fromY"],
+          "toX": move["toX"]+1,
+          "toY": move["fromY"]
         }, True)
-    elif move["en passant"]:
+    elif "en passant" in move:
       #take the enemy pon (actually just set it to no piece)
-      if copy_of_board.getSquare(move.toX, move.toY).isWhite:
-        copy_of_board[move.toX + ((move.toY-1) * 7)] = pieces.NoPiece(move.toX, move.toY-1, copy_of_board)
+      if copy_of_board.getSquare(move["toX"], move["toY"]).isWhite:
+        copy_of_board[move["toX"] + ((move["toY"]-1) * 7)] = pieces.NoPiece(move["toX"], move["toY"]-1, copy_of_board)
       else:
-        copy_of_board[move.toX + ((move.toY+1) * 7)] = pieces.NoPiece(move.toX, move.toY+1, copy_of_board)
+        copy_of_board[move["toX"] + ((move["toY"]+1) * 7)] = pieces.NoPiece(move["toX"], move["toY"]+1, copy_of_board)
     
     # changing properties if has moved
-    if copy_of_board.array[move.toX + (move.toY * 7)].type == "Rook" or copy_of_board.array[move.toX + (move.toY * 7)].type == "King":
-      copy_of_board.array[move.toX + (move.toY * 7)].hasMoved = True
-    elif copy_of_board.array[move.toX + (move.toY * 7)].type == "Pon" and abs(move.toY-move.fromY) == 2:
-      copy_of_board.array[move.toX + (move.toY * 7)].justDoubleMoved = True
+    if copy_of_board.array[move["toX"] + (move["toY"] * 7)].type == "Rook" or copy_of_board.array[move["toX"] + (move["toY"] * 7)].type == "King":
+      copy_of_board.array[move["toX"] + (move["toY"] * 7)].hasMoved = True
+    elif copy_of_board.array[move["toX"] + (move["toY"] * 7)].type == "Pon" and abs(move["toY"]-move["fromY"]) == 2:
+      copy_of_board.array[move["toX"] + (move["toY"] * 7)].justDoubleMoved = True
 
     #apply if apply argument is true otherwise return the new board
     if apply:
@@ -71,14 +71,21 @@ class Board:
 
 
   def Log(self, fromWhite):
-    for y in range(8):
+    if not fromWhite:
       string = ""
-      for x in range(8):
-        if not fromWhite:
-          string += self.array[x + ((7 - y) * 7)].IAM() + " "
-        else:
-          string += self.array[x + (y * 7)].IAM() + " "
-      print(string)
+      for i in range (64):
+        string+=str(self.array[i].isWhite)+" "
+        if (i+1)%8 == 0 and i!=0:
+          print(string)
+          string=""
+    else:
+      string = ""
+      for i in range (64):
+        string+=str(self.array[63-i].isWhite)+" "
+        if (i+1)%8 == 0 and i!=0:
+          print(string)
+          string=""
+    
 
   def getSquare(self, x, y):  # warning in range 0-7!!
     return self.array[x + (y * 7)]
