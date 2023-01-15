@@ -2,6 +2,8 @@
 
 # for all chess pieces
 import pieces
+# for making a copy: normal setting equal to doesn't work in this case
+import copy
 
 # the Board class contains an array for all squares
 # 64 items for each square one item with zero being a1 and 1 being b1
@@ -22,10 +24,16 @@ class Board:
   def Make_move(self, move, apply):
     # move in format {fromX, fromY, toX toY} and if tehy have properties for castling and en passant
 
+    if apply:
+      #will change original
+      copy_of_board = self
+    else:
+      # won't change original
+      copy_of_board = copy.deepcopy(self)
+
     # physically move piece and set old place to no piece
-    copy_of_board = self
-    copy_of_board.array[move["toX"] + (move["toY"] * 7)] = copy_of_board.array[move["fromX"] + (move["fromY"] * 7)]
-    copy_of_board.array[move["fromX"] + (move["fromY"] * 7)] = pieces.NoPiece(move["fromX"], move["fromY"], copy_of_board)
+    copy_of_board.array[move["toX"] + (move["toY"] * 8)] = copy_of_board.array[move["fromX"] + (move["fromY"] * 8)]
+    copy_of_board.array[move["fromX"] + (move["fromY"] * 8)] = pieces.NoPiece(move["fromX"], move["fromY"], copy_of_board)
 
     #clearing just double moved (for en passant) of pons
     for i in range(len(copy_of_board.array)):
@@ -52,20 +60,18 @@ class Board:
     elif "en passant" in move:
       #take the enemy pon (actually just set it to no piece)
       if copy_of_board.getSquare(move["toX"], move["toY"]).isWhite:
-        copy_of_board[move["toX"] + ((move["toY"]-1) * 7)] = pieces.NoPiece(move["toX"], move["toY"]-1, copy_of_board)
+        copy_of_board[move["toX"] + ((move["toY"]-1) * 8)] = pieces.NoPiece(move["toX"], move["toY"]-1, copy_of_board)
       else:
-        copy_of_board[move["toX"] + ((move["toY"]+1) * 7)] = pieces.NoPiece(move["toX"], move["toY"]+1, copy_of_board)
+        copy_of_board[move["toX"] + ((move["toY"]+1) * 8)] = pieces.NoPiece(move["toX"], move["toY"]+1, copy_of_board)
     
     # changing properties if has moved
-    if copy_of_board.array[move["toX"] + (move["toY"] * 7)].type == "Rook" or copy_of_board.array[move["toX"] + (move["toY"] * 7)].type == "King":
-      copy_of_board.array[move["toX"] + (move["toY"] * 7)].hasMoved = True
-    elif copy_of_board.array[move["toX"] + (move["toY"] * 7)].type == "Pon" and abs(move["toY"]-move["fromY"]) == 2:
-      copy_of_board.array[move["toX"] + (move["toY"] * 7)].justDoubleMoved = True
+    if copy_of_board.array[move["toX"] + (move["toY"] * 8)].type == "Rook" or copy_of_board.array[move["toX"] + (move["toY"] * 7)].type == "King":
+      copy_of_board.array[move["toX"] + (move["toY"] * 8)].hasMoved = True
+    elif copy_of_board.array[move["toX"] + (move["toY"] * 8)].type == "Pon" and abs(move["toY"]-move["fromY"]) == 2:
+      copy_of_board.array[move["toX"] + (move["toY"] * 8)].justDoubleMoved = True
 
     #apply if apply argument is true otherwise return the new board
-    if apply:
-      self = copy_of_board
-    else:
+    if not apply:
       return copy_of_board
 
 
@@ -78,12 +84,12 @@ class Board:
           print(string)
           string=""
     else:
-      string = ""
-      for i in range (64):
-        string+=str(self.array[63-i].type)+" "
-        if (i+1)%8 == 0 and i!=0:
-          print(string)
-          string=""
+      for y in range(8):
+        string = ""
+        for x in range(8):
+          number = (7-y)*8+x
+          string += self.array[number].type + " "
+        print(string)
     
 
   def getSquare(self, x, y):  # warning in range 0-7!!
