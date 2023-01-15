@@ -11,11 +11,16 @@ playing = False
 
 while running:
   if playing:
-    move = chatbot.Ask(playing)
-    game.playMove(move)
-    game.AI_move()
+    print("")
+    game.board.Log(True)
+    print("")
+    move = chatbot.Ask(playing, game)
+    if move:
+      game.playMove(move)
+      game.AI_move()
+    else: break
   else:
-    if chatbot.Ask(playing): 
+    if chatbot.Ask(playing, None): 
       playing = True
       game = Game.Game()
     else: break

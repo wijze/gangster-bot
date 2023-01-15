@@ -2,6 +2,27 @@
 import re
 #checkStringFormat wants a string and wil return a true if it is in valid chess move format
 
+# to check if in legal moves
+import genMoves as moveGenerator
+
+
+def validateMove(string, game):
+  is_move = checkStringFormat(string)
+  if not is_move: return False
+
+  played_move = parce_inp_string(string)
+  if not played_move: return "invalid"
+
+  # check if move is in legal moves
+  legal_moves = moveGenerator.genMoves(game.board, False, game.white_to_play)
+  for move in legal_moves:
+    if moveGenerator.compareMoves(move, played_move):
+      return move
+  # if it was not encountered the move is illegal
+  return False
+
+
+
 move_pattern = r'^([Oo0](-[Oo0]){1,2}|[KQRBN]?[a-h]?[1-8]?x?[a-h][1-8](\=[QRBN])?[+#]?(\s(1-0|0-1|1\/2-1\/2))?)$'
 move_regex = re.compile(move_pattern)
 
@@ -16,9 +37,7 @@ fields_regex = re.compile(r'[a-h][1-8]')
 #checkStringFormat("b9") returns false
 
 def checkStringFormat(toCheck):
-  if bool(re.search(move_regex, toCheck)):
-    return parce_inp_string(toCheck)
-  else: return False
+  return bool(re.search(move_regex, toCheck))
 
 def parce_inp_string(string):
   # find the squares (from and to)
@@ -30,9 +49,8 @@ def parce_inp_string(string):
       "toX": convertField(fields[1])[0],
       "toY": convertField(fields[1])[1]
     }
-  else: 
-    print("please provide from field and to field, maybe later only to field for now both")
-    return "invalid"
+  else:
+    return False
   return move
 
 def convertField(field):
