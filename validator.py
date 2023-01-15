@@ -16,7 +16,9 @@ fields_regex = re.compile(r'[a-h][1-8]')
 #checkStringFormat("b9") returns false
 
 def checkStringFormat(toCheck):
-  return bool(re.search(move_regex, toCheck))
+  if bool(re.search(move_regex, toCheck)):
+    return parce_inp_string(toCheck)
+  else: return False
 
 def parce_inp_string(string):
   # find the squares (from and to)
@@ -30,7 +32,7 @@ def parce_inp_string(string):
     }
   else: 
     print("please provide from field and to field, maybe later only to field for now both")
-    return False
+    return "invalid"
   return move
 
 def convertField(field):

@@ -1,63 +1,36 @@
 import validator
 
-import chessGame as Game
 
-def main():
-    welcome()
-
-def verifyInpStr(inputStr):
-    return validator.checkStringFormat(inputStr)
-
-def answer(move):
-    #should generate the answer (the best move)
-    return "answer"
-
-def printHelp(playing):
+def Help(playing):
+    print("help for all commands")
     print("exit to exit")
-    if(playing):
-        print("a chess move to play it")
-    else:
-        print("start to start")
-    
+    if playing: print("a chess move to play it")
+    else: print("start to start")
 
 
-def welcome():
-    running = True
-    while running:
-        print("hello I am a (not finished) chat/chess bot")
-        inpString = input("Enter a start to start or help for all commands: ")
-        if inpString == "help":
-            printHelp(False)
-        elif inpString == "exit":
-            running = False
-            print("exited")
-        elif inpString == "start":
-            game()
-            return
-        else:
-            print("sorry I didn't understand that")
-
-
-def game():
-    game = Game.Game()
-    running = True
-    while running:
+def Ask(playing):
+    if playing:
         inpString = input("Enter a move or help for all commands: ")
-
-        if verifyInpStr(inpString):
-            #returns false if not in correct format
-            parcedMove = validator.parce_inp_string(inpString)
-            succes = game.playMove(parcedMove)
-            if succes:
-                game.AI_move()
-            else: continue
-        elif inpString=="help":
-            printHelp(True)
-        elif inpString == "exit":
-            running = False
-            print("exited")
+        move = validator.checkStringFormat(inpString)
+        if inpString == "help": 
+            Help(playing)
+            return Ask(playing)
+        elif inpString == "exit": return False
         else:
-            print("sorry I didn't understand that")
-        game.board.Log(True)
-
-main()
+            if move == "invalid":
+                return Ask(playing)
+            elif move:
+                return move
+            else:
+                print("sorry I didn't understand you")
+                return Ask(playing)
+    else:
+        inpString = input("Enter start to start or help for all commands: ")
+        if inpString == "help": 
+            Help(playing)
+            return Ask(playing)
+        elif inpString == "exit": return False
+        elif inpString == "start": return True
+        else:
+            print("sorry I didn't understand you")
+            return Ask(playing)

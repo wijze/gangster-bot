@@ -8,5 +8,4 @@ import board
 def generateMove(board, white_to_play):
   possible_moves = MoveGenerator.genMoves(board, False, white_to_play)
   chosen_move = random.randint(0, len(possible_moves)-1)
-  print(len(possible_moves), chosen_move)
   return possible_moves[chosen_move]

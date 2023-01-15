@@ -15,7 +15,6 @@ class Game:
   def playMove(self, playedMove):
     #check if move is in legal moves
     legal_moves = moveGenerator.genMoves(self.board, False, self.white_to_play)
-    print(playedMove)
     for move in legal_moves:
       if moveGenerator.compareMoves(move, playedMove):
         print("succes!")
@@ -32,5 +31,3 @@ class Game:
     self.white_to_play = not self.white_to_play
     return True
     
-game = Game()
-game.AI_move()

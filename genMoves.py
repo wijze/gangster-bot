@@ -38,7 +38,6 @@ def genMoves(board, recursivelyCalled, whiteToPlay):
   if recursivelyCalled:
     return False
   else:
-    print(moves)
     return moves
 
 
