@@ -51,7 +51,18 @@ def parce_inp_string(string):
     }
   else:
     return False
-  return move
+  # promotion
+  if len(re.findall(r'[QRBN]', string))==0:
+    return move
+  elif len(re.findall(r'[QRBN]', string))==1 and len(re.findall(r'^[QRBN]', string))==1:
+    return move
+  elif len(re.findall(r'[QRBN]'))==1:
+    move["promotion"] = re.search(r'[QRBN]', string)
+    return move
+  else:
+    move["promotion"] = re.findall(r'[QRBN]', string)[1].string
+    return move
+  
 
 def convertField(field):
   # from [a-h][1-8] to [0-7][0-7]

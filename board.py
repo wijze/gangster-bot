@@ -69,8 +69,23 @@ class Board:
       copy_of_board.array[move["toX"] + (move["toY"] * 8)].hasMoved = True
     elif copy_of_board.array[move["toX"] + (move["toY"] * 8)].type == "Pon" and abs(move["toY"]-move["fromY"]) == 2:
       copy_of_board.array[move["toX"] + (move["toY"] * 8)].justDoubleMoved = True
+    
+    #promotion
+    if "promotion" in move:
+      if move["promotion"] == "Q": 
+        newPiece = pieces.Queen(move["toX"], move["toY"], copy_of_board.array[move["toX"] + (move["toY"] * 8)].isWhite, copy_of_board)
+      elif move["promotion"] == "R": 
+        newPiece = pieces.Rook(move["toX"], move["toY"], copy_of_board.array[move["toX"] + (move["toY"] * 8)].isWhite, copy_of_board)
+      elif move["promotion"] == "B": 
+        newPiece = pieces.Bishop(move["toX"], move["toY"], copy_of_board.array[move["toX"] + (move["toY"] * 8)].isWhite, copy_of_board)
+      elif move["promotion"] == "N": 
+        newPiece = pieces.Knight(move["toX"], move["toY"], copy_of_board.array[move["toX"] + (move["toY"] * 8)].isWhite, copy_of_board)
+      else: 
+        print("error: invalid promotion piece name")
+        return False
+      copy_of_board.array[move["toX"] + (move["toY"] * 8)] = newPiece
 
-    #apply if apply argument is true otherwise return the new board
+    #apply if applied argument is true otherwise return the new board
     if not apply:
       return copy_of_board
 

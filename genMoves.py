@@ -42,5 +42,10 @@ def genMoves(board, recursivelyCalled, whiteToPlay):
 
 
 def compareMoves(move1, move2):
-  if move1["fromX"]==move2["fromX"] and move1["fromY"]==move2["fromY"] and move1["toX"]==move2["toX"] and move1["toY"]==move2["toY"]: return True
+  if move1["fromX"]==move2["fromX"] and move1["fromY"]==move2["fromY"] and move1["toX"]==move2["toX"] and move1["toY"]==move2["toY"]:
+    if "promotion" in move1 and (not "promotion" in move2):
+      return False
+    elif "promotion" in move1 and "promotion" in move2 and move1["promotion"] != move2["promotion"]:
+      return False
+    return True
   else: return False

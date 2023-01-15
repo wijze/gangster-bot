@@ -52,10 +52,14 @@ class Pon(Piece):
     if self.isWhite:
       if self.posY < 7:
         if self.board.getSquare(self.posX, self.posY + 1).type == "NoPiece":
-          moves.append(self.addMove(self.posX, self.posY + 1))
           # double if it hasn't moved yet
           if not self.hasMoved and self.board.getSquare(self.posX, self.posY + 2).type == "NoPiece" and self.posY==1:
             moves.append(self.addMove(self.posX, self.posY + 2))
+          # promotion if to y=7
+          if self.posY+1==7:
+            moves += promotion_moves(self.posX, self.posY, self.posX, self.posY + 1)
+          else:
+            moves.append(self.addMove(self.posX, self.posY + 1))
         # taking
         if self.board.getSquare(self.posX - 1, self.posY + 1).type != "NoPiece" and not self.board.getSquare(self.posX - 1, self.posY + 1).isWhite:
           moves.append(self.addMove(self.posX - 1, self.posY + 1))
@@ -75,10 +79,14 @@ class Pon(Piece):
     else:
       if self.posY > 0:
         if self.board.getSquare(self.posX, self.posY - 1).type == "NoPiece":
-          moves.append(self.addMove(self.posX, self.posY - 1))
           # double if it hasn't moved yet
           if not self.hasMoved and self.board.getSquare(self.posX, self.posY - 2).type == "NoPiece" and self.posY==6:
             moves.append(self.addMove(self.posX, self.posY - 2))
+          # promotion if to y=0
+          if self.posY-1==0:
+            moves += promotion_moves(self.posX, self.posY, self.posX, self.posY - 1)
+          else:
+            moves.append(self.addMove(self.posX, self.posY - 1))
         # taking
         if self.board.getSquare(self.posX - 1, self.posY - 1).type != "NoPiece" and self.board.getSquare(self.posX - 1, self.posY - 1).isWhite:
           moves.append(self.addMove(self.posX - 1, self.posY + 1))
@@ -217,3 +225,17 @@ def genMovesSlider(directions, distance, position, isWhite, board):
             break
   return moves
 
+promotables = ["Q", "R", "B", "N"]
+
+def promotion_moves(fromX, fromY, toX, toY):
+  moves = []
+  for i in range(len(promotables)):
+    move = {
+      "fromX": fromX,
+      "fromY": fromY,
+      "toX": toX,
+      "toY": toY,
+      "promotion":promotables[i]
+    }
+    moves+=move
+  return moves
