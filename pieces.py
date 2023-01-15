@@ -20,9 +20,6 @@ class Piece:
   def IAM(self):
     return self.type
 
-  def Move(self):
-    print("move is not implemented yet")
-
   def addMove(self, toX, toY):
     return {
       "fromX": self.posX,
@@ -77,7 +74,7 @@ class Pon(Piece):
             moves.append(move)
     else:
       if self.posY > 0:
-        if self.board.getSquare(self.posX, self.posY + 1).type == "NoPiece":
+        if self.board.getSquare(self.posX, self.posY - 1).type == "NoPiece":
           moves.append(self.addMove(self.posX, self.posY - 1))
           # double if it hasn't moved yet
           if not self.hasMoved and self.board.getSquare(self.posX, self.posY - 2).type == "NoPiece" and self.posY==6:
@@ -112,6 +109,8 @@ class Knight(Piece):
     for move in self.relative_moves:
       if not (self.posY+move[1]>7 or self.posY+move[1]<0 or self.posX+move[0]>7 or self.posX+move[0]<0):
         if self.board.getSquare(self.posX+move[0], self.posY+move[1]).type == "NoPiece":
+          moves.append(self.addMove(self.posX+move[0], self.posY+move[1]))
+        else:
           #white
           if self.isWhite and not self.board.getSquare(self.posX+move[0], self.posY+move[1]).isWhite:
             moves.append(self.addMove(self.posX+move[0], self.posY+move[1]))
@@ -184,17 +183,17 @@ class King(Piece):
             move["castling"] = True
             moves.append(move)
     else:
-      if (not self.hasMoved) and self.board.getSquare(self.posX+4, self.posY).type == "Rook":
-        if not self.board.getSquare(self.posX+4, self.posY).hasMoved:
-          if self.board.getSquare(self.posX+1, self.posY).type == "NoPiece" and self.board.getSquare(self.posX+2, self.posY).type == "NoPiece" and self.board.getSquare(self.posX+3, self.posY).type == "NoPiece":
+      if (not self.hasMoved) and self.board.getSquare(self.posX+3, self.posY).type == "Rook":
+        if not self.board.getSquare(self.posX+3, self.posY).hasMoved:
+          if self.board.getSquare(self.posX+1, self.posY).type == "NoPiece" and self.board.getSquare(self.posX+2, self.posY).type == "NoPiece":
             move = self.addMove(self.posX+2, self.posY)
-            move.castling = True
+            move["castling"] = True
             moves.append(move)
-      if (not self.hasMoved) and self.board.getSquare(self.posX-3, self.posY).type == "Rook":
-        if not self.board.getSquare(self.posX-3, self.posY).hasMoved:
-          if self.board.getSquare(self.posX-1, self.posY).type == "NoPiece" and self.board.getSquare(self.posX-2, self.posY).type == "NoPiece":
+      if (not self.hasMoved) and self.board.getSquare(self.posX-4, self.posY).type == "Rook":
+        if not self.board.getSquare(self.posX-4, self.posY).hasMoved:
+          if self.board.getSquare(self.posX-1, self.posY).type == "NoPiece" and self.board.getSquare(self.posX-2, self.posY).type == "NoPiece"and self.board.getSquare(self.posX-3, self.posY).type == "NoPiece":
             move = self.addMove(self.posX-2, self.posY)
-            move.castling = True
+            move["castling"] = True
             moves.append(move)
     return moves
 

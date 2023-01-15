@@ -1,12 +1,11 @@
 def genMoves(board, recursivelyCalled, whiteToPlay):
   moves = []
   #generate all possible moves (not accounting for check)
-  i=0
   for piece in board.array:
-    i+=1
-    if piece.isWhite == whiteToPlay:
+    if (piece.isWhite and whiteToPlay) or ((not piece.isWhite) and (not whiteToPlay)):
       moves += piece.genMoves()
-
+  
+  
   # loop all moves and if it results in the own king being in check delete this move
   for i in range(len(moves)):
     # check for check by generating all moves of the enemy and checking if they are taking the king

@@ -47,8 +47,8 @@ def game():
         if verifyInpStr(inpString):
             #returns false if not in correct format
             parcedMove = validator.parce_inp_string(inpString)
-            if parcedMove:
-                game.playMove(parcedMove)
+            succes = game.playMove(parcedMove)
+            if succes:
                 game.AI_move()
             else: continue
         elif inpString=="help":
