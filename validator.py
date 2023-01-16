@@ -19,7 +19,7 @@ def validateMove(string, game):
     if moveGenerator.compareMoves(move, played_move):
       return move
   # if it was not encountered the move is illegal
-  return False
+  return "invalid"
 
 
 

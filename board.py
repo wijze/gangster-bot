@@ -34,6 +34,9 @@ class Board:
     # physically move piece and set old place to no piece
     copy_of_board.array[move["toX"] + (move["toY"] * 8)] = copy_of_board.array[move["fromX"] + (move["fromY"] * 8)]
     copy_of_board.array[move["fromX"] + (move["fromY"] * 8)] = pieces.NoPiece(move["fromX"], move["fromY"], copy_of_board)
+    #change it in the piece itself
+    copy_of_board.array[move["toX"] + (move["toY"] * 8)].posX = move["toX"]
+    copy_of_board.array[move["toX"] + (move["toY"] * 8)].posY = move["toY"]
 
     #clearing just double moved (for en passant) of pons
     for i in range(len(copy_of_board.array)):
