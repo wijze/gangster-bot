@@ -11,4 +11,8 @@ https://www.youtube.com/watch?v=4qwFwdCcgac
 (tutorial)
 
 https://github.com/liudmil-mitev/Simple-Python-Chess/blob/master/chesslib/gui_tkinter.py
-(visuals with tkinter example)
+https://github.com/Abdalla981/Chess_Game_in_Tkinter/blob/main/main.py
+(visuals with tkinter examples)
+
+https://www.youtube.com/watch?v=EnYui0e73Rs
+(chess with tkinter tutorial)
