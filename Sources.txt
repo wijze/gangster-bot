@@ -9,3 +9,6 @@ https://www.ichess.net/blog/chess-notation/
 
 https://www.youtube.com/watch?v=4qwFwdCcgac
 (tutorial)
+
+https://github.com/liudmil-mitev/Simple-Python-Chess/blob/master/chesslib/gui_tkinter.py
+(visuals with tkinter example)
