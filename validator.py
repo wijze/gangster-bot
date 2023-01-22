@@ -41,7 +41,9 @@ def checkStringFormat(toCheck):
 
 def parce_inp_string(string):
   # find the squares (from and to)
+  # Puts the moves in a list
   fields = re.findall(fields_regex, string)
+  # now 'fields' contains the previous positon of the piece and the next position of the piece
   if(len(fields)==2):
     move = {
       "fromX": convertField(fields[0])[0],
@@ -52,14 +54,17 @@ def parce_inp_string(string):
   else:
     return False
   # promotion
+
+    # If string is pawnmove and doesn't promote
   if len(re.findall(r'[QRBN]', string))==0:
     return move
-  elif len(re.findall(r'[QRBN]', string))==1 and len(re.findall(r'^[QRBN]', string))==1:
-    return move
-  elif len(re.findall(r'[QRBN]'))==1:
+    # If the pawn promotes while taking another piece
+  elif len(re.findall(r'[QRBN]', string))==1: # and len(re.findall(r'^[QRBN]', string))==1
     move["promotion"] = re.search(r'[QRBN]', string)
     return move
   else:
+
+# Wat does deze lijn?
     move["promotion"] = re.findall(r'[QRBN]', string)[1].string
     return move
   
