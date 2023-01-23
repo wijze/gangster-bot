@@ -53,18 +53,25 @@ def parce_inp_string(string):
     }
   else:
     return False
+  
   # promotion
 
-    # If string is pawnmove and doesn't promote
+  # If string doesn't supply the piece (isn't a problem) and doesn't promote
   if len(re.findall(r'[QRBN]', string))==0:
     return move
-    # If the pawn promotes while taking another piece
-  elif len(re.findall(r'[QRBN]', string))==1: # and len(re.findall(r'^[QRBN]', string))==1
+  
+   # if it the move supplies only its own type
+  elif len(re.findall(r'[QRBN]', string))==1 and len(re.findall(r'^[QRBN]', string))==1:
+    return move
+  
+  # else it only supplies what piece to promote to
+  elif len(re.findall(r'[QRBN]', string))==1
     move["promotion"] = re.search(r'[QRBN]', string)
     return move
+  
+  #len(re.findall(r'[QRBN]', string))==2, it supplies original piece and piece to promote to
   else:
-
-# Wat does deze lijn?
+# sets piece to promote to like bischop or knight (if not supplied wil be queen)
     move["promotion"] = re.findall(r'[QRBN]', string)[1].string
     return move
   
