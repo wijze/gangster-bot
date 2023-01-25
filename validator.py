@@ -1,86 +1,67 @@
 #this file uses python library named re for pattern recognition
 import re
-#checkStringFormat wants a string and wil return a true if it is in valid chess move format
 
-# to check if in legal moves
+# import move generator
 import genMoves as moveGenerator
 
-
-def validateMove(string, game):
-  is_move = checkStringFormat(string)
-  if not is_move: return False
-
-  played_move = parce_inp_string(string)
-  if not played_move: return "invalid"
-
-  # check if move is in legal moves
-  legal_moves = moveGenerator.genMoves(game.board, False, game.white_to_play)
-  for move in legal_moves:
-    if moveGenerator.compareMoves(move, played_move):
-      return move
-  # if it was not encountered the move is illegal
-  return "invalid"
-
-
-
-move_pattern = r'^([Oo0](-[Oo0]){1,2}|[KQRBN]?[a-h]?[1-8]?x?[a-h][1-8](\=[QRBN])?[+#]?(\s(1-0|0-1|1\/2-1\/2))?)$'
-move_regex = re.compile(move_pattern)
-
-fields_regex = re.compile(r'[a-h][1-8]')
-
-#I have copied the pattern from https://8bitclassroom.com/2020/08/16/chess-in-regex/
-#it seems to work
-
-#checkStringFormat("b4") returns true
-#checkStringFormat("1") returns false
-#checkStringFormat("Nbxc5") returns true
-#checkStringFormat("b9") returns false
-
+# function to check if input string is in valid chess move format
 def checkStringFormat(toCheck):
-  return bool(re.search(move_regex, toCheck))
+    # compile regex pattern
+    move_pattern = r'^([Oo0](-[Oo0]){1,2}|[KQRBN]?[a-h]?[1-8]?x?[a-h][1-8](\=[QRBN])?[+#]?(\s(1-0|0-1|1\/2-1\/2))?)$'
+    move_regex = re.compile(move_pattern)
+    # return boolean indicating if string matches pattern
+    return re.search(move_regex, toCheck)
 
-def parce_inp_string(string):
-  # find the squares (from and to)
-  # Puts the moves in a list
-  fields = re.findall(fields_regex, string)
-  # now 'fields' contains the previous positon of the piece and the next position of the piece
-  if(len(fields)==2):
-    move = {
-      "fromX": convertField(fields[0])[0],
-      "fromY": convertField(fields[0])[1],
-      "toX": convertField(fields[1])[0],
-      "toY": convertField(fields[1])[1]
-    }
-  else:
-    return False
-  
-  # promotion
+# function to parse input string and return move object
+def parse_input_string(string):
+    # compile regex pattern to find squares in string
+    fields_regex = re.compile(r'[a-h][1-8]')
+    # find the squares (from and to)
+    fields = re.findall(fields_regex, string)
+    # check if input string contains two squares
+    if len(fields) == 2:
+        # create move object with from and to positions
+        move = {
+            "fromX": convertField(fields[0])[0],
+            "fromY": convertField(fields[0])[1],
+            "toX": convertField(fields[1])[0],
+            "toY": convertField(fields[1])[1]
+        }
+        # check if input string contains promotion
+        promotions = re.findall(r'[QRBN]', string)
+        if promotions:
+            # if string contains only one promotion character, check if it's a valid promotion
+            if len(promotions) == 1:
+                promotion = promotions[0]
+                if promotion in ['Q','R','B','N']:
+                    move["promotion"] = promotion
+                else:
+                    return False
+            # if string contains two promotion characters, check if the second one is a valid promotion
+            elif len(promotions) == 2:
+                promotion = promotions[1]
+                if promotion in ['Q','R','B','N']:
+                    move["promotion"] = promotion
+                else:
+                    return False
+        return move
+    else:
+        return False
 
-  # If string doesn't supply the piece (isn't a problem) and doesn't promote
-  if len(re.findall(r'[QRBN]', string))==0:
-    return move
-  
-   # if it the move supplies only its own type
-  elif len(re.findall(r'[QRBN]', string))==1 and len(re.findall(r'^[QRBN]', string))==1:
-    return move
-  
-  # else it only supplies what piece to promote to
-  elif len(re.findall(r'[QRBN]', string))==1
-    move["promotion"] = re.search(r'[QRBN]', string)
-    return move
-  
-  #len(re.findall(r'[QRBN]', string))==2, it supplies original piece and piece to promote to
-  else:
-# sets piece to promote to like bischop or knight (if not supplied wil be queen)
-    move["promotion"] = re.findall(r'[QRBN]', string)[1].string
-    return move
-  
-
+# function to convert field from algebraic notation to array indices
 def convertField(field):
-  # from [a-h][1-8] to [0-7][0-7]
-  x = ord(field[0]) - 97
-  y = int(field[1]) - 1
-  return[x, y]
+    x = ord(field[0]) - 97
+    y = int(field[1]) - 1
+    return [x, y]
 
-# print(ord("a") - 97), returns 0
-# print(convertField("a8")), returns [0, 7]
+# main function to validate move
+def validateMove(string, game):
+    is_move = checkStringFormat(string)
+    if not is_move: return False
+    played_move = parse_input_string(string)
+    if not played_move: return False
+    legal_moves = moveGenerator.genMoves(game.board, False, game.white_to_play)
+    for move in legal_moves:
+        if moveGenerator.compareMoves(move, played_move):
+            return move
+    return False
