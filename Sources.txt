@@ -16,3 +16,6 @@ https://github.com/Abdalla981/Chess_Game_in_Tkinter/blob/main/main.py
 
 https://www.youtube.com/watch?v=EnYui0e73Rs
 (chess with tkinter tutorial)
+
+http://cs231n.stanford.edu/reports/2015/pdfs/ConvChess.pdf
+(chess ai paper)
