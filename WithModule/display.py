@@ -1,34 +1,51 @@
 import tkinter as tk
-from PIL import ImageTk, Image
+
 import getpieces
-# import os
+import loadImages
 
-# os.listdir()
-# 
-# img = ImageTk.PhotoImage(Image.open("../chess_images/bB.png"))
+from sys import exit
 
 
-root = tk.Tk()
-root.title("test")
+class Display:
+    def __init__(self, board):
+        self.root = tk.Tk()
+        self.root.title("test")
 
-# panel = tk.Label(root, image = img)
+        self.images = loadImages.loadImages()
+        self.colors = ["white", "gray"]
+        self.square_size = 60
+
+        self.root.protocol("WM_DELETE_WINDOW", self.exitProgram)
+
+        self.update(board)
+
+    def update(self, board):
+        pieces = getpieces.getpieces(board)
+        self.drawBoard(pieces)
+        self.root.update()
+
+    def drawBoard(self, pieces):
+        if hasattr(self,"boardCanvas"): self.boardCanvas.delete("all")
+        else: self.boardCanvas = tk.Canvas(self.root, width=8*self.square_size, height=8*self.square_size)
+        self.boardCanvas.pack()
+
+        for row in range (8):
+            for column in range (8):
+                if (((row+column)/2)%1) == 0: color = self.colors[0]
+                else: color = self.colors[1]
+
+                self.boardCanvas.create_rectangle(column*self.square_size, row*self.square_size, (column+1) * self.square_size, (row+1) * self.square_size, fill=color, outline="black")
+
+                if(pieces[row][column] != "None"):
+                    self.boardCanvas.create_image(((column+0.5)*self.square_size, (row+0.5)*self.square_size),
+                                       image=self.images[pieces[row][column]])
+    
+    def exitProgram(self):
+        exit()
+
+
+# panel = tk.Label(root, image = images["B"])
 # panel.pack()
 
-quit_button = tk.Button(root, text="Quit", command=root.quit)
-quit_button.pack()
-
-dimensions = 8
-square_size = 32
-
-colors = ["white", "gray"]
-
-board = tk.Canvas(root, width=dimensions*square_size, height=dimensions*square_size)
-board.pack()
-
-for row in range (dimensions):
-    for column in range (dimensions):
-        if (((row+column)/2)%1) == 0: color = colors[0]
-        else: color = colors[1]
-        board.create_rectangle(column*square_size, row*square_size, (column+1) * square_size, (row+1) * square_size, fill=color, outline="black")
-
-root.mainloop()
+# quit_button = tk.Button(root, text="Quit", command=root.quit)
+# quit_button.pack()
