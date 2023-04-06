@@ -2,6 +2,8 @@ import random
 import chess
 import copy
 
+max_depth = 3
+
 values = {
     chess.ROOK: 5,
     chess.KNIGHT: 3,
@@ -44,7 +46,7 @@ def evaluate_position(board):
     return material_balance
 
 
-def generateMove(board_reference):
+def generateMove(board_reference, depth):
     board = copy.deepcopy(board_reference)
 
     white_to_move = board.turn
@@ -58,10 +60,18 @@ def generateMove(board_reference):
     if white_to_move: best_moves['evaluation'] = -1000
     else: best_moves['evaluation'] = 1000
 
+    if len(legal_moves) == 0:
+        print("warning: no legal moves")
+        print("warning occurred at depth:", depth)
+        return best_moves
+
     for i in range(len(legal_moves)):
         board.push(legal_moves[i])
-        
-        evaluation = evaluate_position(board)
+
+        if depth >= max_depth:
+            evaluation = evaluate_position(board)
+        else:
+            evaluation = generateMove(board, depth+1)['evaluation']
 
         if evaluation == best_moves['evaluation']:
             best_moves['move_indexes'].append(i)
@@ -74,6 +84,10 @@ def generateMove(board_reference):
 
         board.pop()
 
-    move = legal_moves[best_moves['move_indexes'][random.randrange(0, len(best_moves['move_indexes']))]]
+    chosen_move = legal_moves[best_moves['move_indexes'][random.randrange(0, len(best_moves['move_indexes']))]]
+    move = {
+        'move': chosen_move,
+        'evaluation': best_moves['evaluation']
+    }
 
     return move

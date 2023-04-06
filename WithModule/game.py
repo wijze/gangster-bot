@@ -27,7 +27,7 @@ class Game:
 			
 	
 	def ai_move(self):
-		move = ai.generateMove(self.board)
+		move = ai.generateMove(self.board, 0)['move']
 		print("ai_move:", str(move))
 		self.enterMove(move)
 		# board.suggest(thinking_time=2)
