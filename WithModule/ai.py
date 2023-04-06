@@ -1,8 +1,11 @@
 import random
 import chess
-import copy
 
 max_depth = 3
+
+
+def generate_move(board):
+    return search_tree(board, 0, evaluate_position(board))
 
 values = {
     chess.ROOK: 5,
@@ -14,41 +17,46 @@ values = {
 }
 
 string_to_piece = {
-    'r': chess.ROOK,
-    'n': chess.KNIGHT,
-    'b': chess.BISHOP,
-    'q': chess.QUEEN,
-    'k': chess.KING,
-    'p': chess.PAWN,
+    'r': 4, # ROOK
+    'n': 2, # KNIGHT
+    'b': 3, # BISHOP
+    'q': 5, # QUEEN
+    'k': 6, # KING
+    'p': 1, # PAWN
 }
 
 
-def get_all_pieces(board): # because the module is stupid
-    pieces = []
+# def get_all_pieces(board): # because the module is stupid
+#     pieces = []
+#     for i in range(8):
+#         for j in range(8):
+#             piece = board.piece_at(chess.square(i,j))
+#             if piece != None:
+#                 pieces.append(piece)
+#     return pieces
+
+def get_material_balance(board):
+    balance = 0 # positive for white advantage
+
     for i in range(8):
         for j in range(8):
             piece = board.piece_at(chess.square(i,j))
-            if str(piece) != "None":
-                pieces.append(chess.Piece(string_to_piece[str(piece).lower()], not str(piece).islower()))
-    return pieces
+            if piece == None: continue
 
+            if piece.color == chess.WHITE:
+                balance += values[piece.piece_type]
+            else:
+                balance -= values[piece.piece_type]
+
+    return balance
 
 def evaluate_position(board):
     # just uses material value as evaluation for now
 
-    material_balance = 0  # positive for white
-    for piece in get_all_pieces(board):
-        if piece.color == chess.WHITE:
-            material_balance += values[piece.piece_type]
-        else:
-            material_balance -= values[piece.piece_type]
-
-    return material_balance
+    return get_material_balance(board)
 
 
-def generateMove(board_reference, depth):
-    board = copy.deepcopy(board_reference)
-
+def search_tree(board, depth, layer_up_best_move_evaluation):
     white_to_move = board.turn
 
     legal_moves = list(board.legal_moves)
@@ -57,8 +65,8 @@ def generateMove(board_reference, depth):
         'move_indexes': []
     }
 
-    if white_to_move: best_moves['evaluation'] = -1000
-    else: best_moves['evaluation'] = 1000
+    if white_to_move: best_moves['evaluation'] = -100
+    else: best_moves['evaluation'] = 100
 
     if len(legal_moves) == 0:
         print("warning: no legal moves")
@@ -71,8 +79,8 @@ def generateMove(board_reference, depth):
         if depth >= max_depth:
             evaluation = evaluate_position(board)
         else:
-            evaluation = generateMove(board, depth+1)['evaluation']
-
+            evaluation = search_tree(board, depth+1, best_moves['evaluation'])['evaluation']
+        
         if evaluation == best_moves['evaluation']:
             best_moves['move_indexes'].append(i)
         elif evaluation > best_moves['evaluation'] and white_to_move:
@@ -84,6 +92,12 @@ def generateMove(board_reference, depth):
 
         board.pop()
 
+        # alpha-beta pruning optimization
+        if white_to_move and evaluation > layer_up_best_move_evaluation:
+            break
+        if (not white_to_move) and evaluation < layer_up_best_move_evaluation:
+            break
+
     chosen_move = legal_moves[best_moves['move_indexes'][random.randrange(0, len(best_moves['move_indexes']))]]
     move = {
         'move': chosen_move,
@@ -91,3 +105,11 @@ def generateMove(board_reference, depth):
     }
 
     return move
+
+# to watch performance:
+
+# import cProfile
+# cProfile.run("print(generate_move(chess.Board()))['move']",sort="cumtime")
+
+# 197281 positions evaluated for max_depth = 3 and no alpha-beta (35sec for me)
+# 74781 positions evaluated for max_depth = 3 with alpha-beta (13sec for me)
