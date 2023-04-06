@@ -1,4 +1,5 @@
-import game # does handling the gamea2
+import game  # does handling the game
+
 
 def main():
     current_game = game.Game()
@@ -10,4 +11,6 @@ def main():
             current_game.ai_move()
         else: break
     print("game over")
+
+
 main()
