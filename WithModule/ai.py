@@ -1,7 +1,7 @@
 import random
 import chess
 
-max_depth = 5 # must be bigger then 0
+max_depth = 4 # must be bigger then 0
 
 def generate_move(board):
     return search_tree(board, 0, evaluate_position(board))
@@ -33,16 +33,15 @@ def evaluate_position(board):
 
 
 def search_tree(board, depth, layer_up_best_move_evaluation):
+    if depth >= max_depth: 
+        return evaluate_position(board)
+    
     white_to_move = board.turn
-
-    legal_moves  = list(board.legal_moves)
-    random.shuffle(legal_moves)
 
     evaluation_list = []
     best_move_evaluation = -100 if white_to_move else 100
-
-    if depth >= max_depth: 
-        return evaluate_position(board)
+    
+    legal_moves  = list(board.legal_moves)
 
     for i in range(len(legal_moves)):
         board.push(legal_moves[i])
@@ -57,10 +56,10 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
 
         board.pop()
 
-        # alpha-beta pruning optimization
-        if white_to_move and evaluation >= layer_up_best_move_evaluation:
+        # alpha-beta pruning optimization: does not work yet
+        if white_to_move and evaluation > layer_up_best_move_evaluation:
             break
-        if (not white_to_move) and evaluation <= layer_up_best_move_evaluation:
+        if (not white_to_move) and evaluation < layer_up_best_move_evaluation:
             break
 
     if depth == 0:
@@ -79,5 +78,3 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
 
 # import cProfile
 # cProfile.run("generate_move(chess.Board())",sort="cumtime")
-
-# runs in 5 sec with alpha-beta and max_depth=3
