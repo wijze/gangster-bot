@@ -1,10 +1,10 @@
-import random
+# import random
 import chess
 
 max_depth = 4 # must be bigger then 0
 
 def generate_move(board):
-    return search_tree(board, 0, evaluate_position(board))
+    return search_tree(board, 0, get_material_balance(board))
 
 values = {
     chess.ROOK: 5,
@@ -16,25 +16,25 @@ values = {
 }
 
 def get_material_balance(board):
-    balance = 0 # positive for white advantage
-    piece_map = board.piece_map()
+    balance = 0
 
-    for value in piece_map.values():
-        if value.color == chess.WHITE:
-            balance += values[value.piece_type]
-        else:
-            balance -= values[value.piece_type]
-
+    balance += 1* bin(board.pawns & board.occupied_co[chess.WHITE]).count('1')
+    balance += -1* bin(board.pawns & board.occupied_co[chess.BLACK]).count('1')
+    balance += 3* bin(board.knights & board.occupied_co[chess.WHITE]).count('1')
+    balance += -3* bin(board.knights & board.occupied_co[chess.BLACK]).count('1')
+    balance += 3* bin(board.bishops & board.occupied_co[chess.WHITE]).count('1')
+    balance += -3* bin(board.bishops & board.occupied_co[chess.BLACK]).count('1')
+    balance += 5* bin(board.rooks & board.occupied_co[chess.WHITE]).count('1')
+    balance += -5* bin(board.rooks & board.occupied_co[chess.BLACK]).count('1')
+    balance += 9* bin(board.queens & board.occupied_co[chess.WHITE]).count('1')
+    balance += -9* bin(board.queens & board.occupied_co[chess.BLACK]).count('1')
+    
     return balance
-
-def evaluate_position(board):
-    return get_material_balance(board)
-    # just uses material value as evaluation for now
-
+    
 
 def search_tree(board, depth, layer_up_best_move_evaluation):
     if depth >= max_depth: 
-        return evaluate_position(board)
+        return get_material_balance(board) # uses material balance for now
     
     white_to_move = board.turn
 
@@ -56,7 +56,7 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
 
         board.pop()
 
-        # alpha-beta pruning optimization: does not work yet
+        # alpha-beta pruning optimization
         if white_to_move and evaluation > layer_up_best_move_evaluation:
             break
         if (not white_to_move) and evaluation < layer_up_best_move_evaluation:
@@ -71,10 +71,11 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
             'evaluation': best_move_evaluation
         }
         return move
-    else: return best_move_evaluation
+    else: 
+        return best_move_evaluation
     
 
 # to watch performance:
 
 # import cProfile
-# cProfile.run("generate_move(chess.Board())",sort="cumtime")
+# cProfile.run("generate_move(chess.Board())",sort="tottime")

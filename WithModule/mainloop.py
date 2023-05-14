@@ -1,5 +1,6 @@
 import game  # does handling the game
 
+# promoting is notated as a7a8q
 
 def main():
     current_game = game.Game()
