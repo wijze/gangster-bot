@@ -19,3 +19,10 @@ https://www.youtube.com/watch?v=EnYui0e73Rs
 
 http://cs231n.stanford.edu/reports/2015/pdfs/ConvChess.pdf
 (chess ai paper)
+
+https://en.wikipedia.org/wiki/Chess_piece_relative_value
+https://www.chessprogramming.org/Simplified_Evaluation_Function
+(position evaluation)
+
+https://web.archive.org/web/20071026090003/http://www.brucemo.com/compchess/programming/index.htm
+(general things to implement)

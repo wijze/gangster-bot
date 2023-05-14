@@ -1,7 +1,7 @@
 # import random
 import chess
 
-max_depth = 4 # must be bigger then 0
+max_depth = 5 # must be bigger then 0
 
 def generate_move(board):
     return search_tree(board, 0, get_material_balance(board))
@@ -38,21 +38,20 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
     
     white_to_move = board.turn
 
-    evaluation_list = []
+    best_move = chess.Move.null()
     best_move_evaluation = -100 if white_to_move else 100
-    
-    legal_moves  = list(board.legal_moves)
 
-    for i in range(len(legal_moves)):
-        board.push(legal_moves[i])
+    for move in board.legal_moves:
+        board.push(move)
 
         evaluation = search_tree(board, depth+1, best_move_evaluation)
-        evaluation_list.append(evaluation)
         
         if evaluation > best_move_evaluation and white_to_move:
             best_move_evaluation = evaluation
+            best_move = move
         elif evaluation < best_move_evaluation and (not white_to_move):
             best_move_evaluation = evaluation
+            best_move = move
 
         board.pop()
 
@@ -63,11 +62,8 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
             break
 
     if depth == 0:
-        if len(legal_moves)==0:
-            print("error: no legal moves for AI")
-            return
         move = {
-            'move': legal_moves[list.index(evaluation_list, best_move_evaluation)],
+            'move': best_move,
             'evaluation': best_move_evaluation
         }
         return move
