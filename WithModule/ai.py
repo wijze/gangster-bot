@@ -1,5 +1,6 @@
 # import random
 import chess
+import itertools
 
 max_depth = 5 # must be bigger then 0
 
@@ -42,7 +43,10 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
     best_move_evaluation = -100 if white_to_move else 100
 
     
-    for move in board.legal_moves:
+    for move in itertools.chain(
+        board.generate_legal_moves(chess.BB_ALL, board.occupied_co[not board.turn]),
+        board.generate_legal_moves(chess.BB_ALL, ~board.occupied)
+    ): # orders attacks first
         board.push(move)
 
         evaluation = search_tree(board, depth+1, best_move_evaluation)
@@ -74,6 +78,6 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
 
 # to watch performance:
 
-import cProfile
-cProfile.run("generate_move(chess.Board())",sort="tottime")
+# import cProfile
+# cProfile.run("generate_move(chess.Board())",sort="tottime")
 # 7.8 sec
