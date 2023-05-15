@@ -41,6 +41,7 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
     best_move = chess.Move.null()
     best_move_evaluation = -100 if white_to_move else 100
 
+    
     for move in board.legal_moves:
         board.push(move)
 
@@ -73,5 +74,6 @@ def search_tree(board, depth, layer_up_best_move_evaluation):
 
 # to watch performance:
 
-# import cProfile
-# cProfile.run("generate_move(chess.Board())",sort="tottime")
+import cProfile
+cProfile.run("generate_move(chess.Board())",sort="tottime")
+# 7.8 sec
