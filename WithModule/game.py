@@ -29,7 +29,7 @@ class Game:
 	def ai_move(self):
 		move = ai.generate_move(self.board)
 		print("ai_move:", str(move['move']))
-		print('evaluation:',move['evaluation'])
+		print('evaluation:',move['evaluation']/100)
 		self.enterMove(move['move'])
 
 

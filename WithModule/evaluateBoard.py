@@ -1,6 +1,24 @@
 import chess
 
+matches = 0
+evaluations = {}
+
 def evaluate_board(board):
+    # global matches
+
+    # hash_number = board.pawns
+    # hash_number ^= board.knights
+    # hash_number ^= board.bishops
+    # hash_number ^= board.rooks
+    # hash_number ^= board.queens
+    # hash_number ^= board.kings
+
+    # try:
+    #     matches+=1
+    #     return evaluations[hash_number]
+    # except: pass
+    # matches-=1
+
     balance = 0
 
     balance += get_piece_type_total_value(board, 0)
@@ -10,6 +28,7 @@ def evaluate_board(board):
     balance += get_piece_type_total_value(board, 4)
     balance += get_piece_type_total_value(board, 5)
     
+    # evaluations[hash_number] = balance
     return balance
 
 def get_piece_type_total_value(board, piece_type):
@@ -120,3 +139,7 @@ piece_values = {
     4:900, # queen
     5:10000 # king
 }
+
+# board = chess.Board()
+
+# print(evaluate_board(board), matches)
