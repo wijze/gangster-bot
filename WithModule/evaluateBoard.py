@@ -19,36 +19,40 @@ def evaluate_board(board):
     # except: pass
     # matches-=1
 
-    balance = 0
+    # balance = 0
 
-    balance += get_piece_type_total_value(board, 0)
-    balance += get_piece_type_total_value(board, 1)
-    balance += get_piece_type_total_value(board, 2)
-    balance += get_piece_type_total_value(board, 3)
-    balance += get_piece_type_total_value(board, 4)
-    balance += get_piece_type_total_value(board, 5)
+    # balance += get_piece_type_total_value(board, 0)
+    # balance += get_piece_type_total_value(board, 1)
+    # balance += get_piece_type_total_value(board, 2)
+    # balance += get_piece_type_total_value(board, 3)
+    # balance += get_piece_type_total_value(board, 4)
+    # balance += get_piece_type_total_value(board, 5)
     
-    # evaluations[hash_number] = balance
-    return balance
+    # # evaluations[hash_number] = balance
+    # return balance
 
-def get_piece_type_total_value(board, piece_type):
-    # pieces_array = [board.pawns, board.knights, board.bishops, board.rooks, board.queens, board.kings]
+    pieces_array = [board.pawns, board.knights, board.bishops, board.rooks, board.queens, board.kings]
     total = 0
 
-    # for i in range(len(pieces_array)):
-    #     ocuppied=board.occupied_co[chess.WHITE]
-    #     n=0
-    #     while pieces_array[i]:
-    #         if pieces_array[i] & 1 & ocuppied:
-    #             total += piece_placement_values[i][63-n]
-    #             total += piece_values[i]
-    #         elif pieces_array[i] & 1:
-    #             total -= piece_placement_values[i][n]
-    #             total -= piece_values[i]
-    #         n+=1
-    #         pieces_array[i] = pieces_array[i] >> 1
-    #         ocuppied = ocuppied >> 1
+    for i in range(6):
+        ocuppied = board.occupied_co[chess.WHITE]
+        n = 1
+        m=0
+        while m <= 63:
+            relevant_bit = pieces_array[i] & n
+            if relevant_bit & ocuppied:
+                total += piece_placement_values[i][63-m]
+                total += piece_values[i]
+            elif relevant_bit:
+                total -= piece_placement_values[i][m]
+                total -= piece_values[i]
+            n*=2
+            m+=1
+    
+    return total
 
+def get_piece_type_total_value(board, piece_type):
+    total = 0
 
     placement_values = piece_placement_values[piece_type]
     piece_value = piece_values[piece_type]
@@ -68,7 +72,7 @@ def get_piece_type_total_value(board, piece_type):
             total += placement_values[n]
             total += piece_value
         n-=1
-        white_placements = white_placements >> 1
+        white_placements >>= 1
 
     n = 0
     while black_placements:
@@ -76,7 +80,7 @@ def get_piece_type_total_value(board, piece_type):
             total -= placement_values[n]
             total -= piece_value
         n+=1
-        black_placements = black_placements >> 1
+        black_placements >>= 1
 
     return total
 
@@ -154,7 +158,16 @@ piece_values = {
     5:10000 # king
 }
 
-# board = chess.Board()
-# board.push(chess.Move.from_uci('e2e4'))
 
-# print(evaluate_board(board))
+board = chess.Board()
+def perf(n=10000):
+    for i in range(n):
+        evaluate_board(board)
+
+import cProfile
+cProfile.run('perf()')
+
+print(evaluate_board(board))
+
+# 675ms new
+# 370ms old
