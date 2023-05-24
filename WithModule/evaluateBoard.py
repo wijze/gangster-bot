@@ -32,7 +32,23 @@ def evaluate_board(board):
     return balance
 
 def get_piece_type_total_value(board, piece_type):
+    # pieces_array = [board.pawns, board.knights, board.bishops, board.rooks, board.queens, board.kings]
     total = 0
+
+    # for i in range(len(pieces_array)):
+    #     ocuppied=board.occupied_co[chess.WHITE]
+    #     n=0
+    #     while pieces_array[i]:
+    #         if pieces_array[i] & 1 & ocuppied:
+    #             total += piece_placement_values[i][63-n]
+    #             total += piece_values[i]
+    #         elif pieces_array[i] & 1:
+    #             total -= piece_placement_values[i][n]
+    #             total -= piece_values[i]
+    #         n+=1
+    #         pieces_array[i] = pieces_array[i] >> 1
+    #         ocuppied = ocuppied >> 1
+
 
     placement_values = piece_placement_values[piece_type]
     piece_value = piece_values[piece_type]
@@ -48,8 +64,7 @@ def get_piece_type_total_value(board, piece_type):
 
     n = 63
     while white_placements:
-        last_bit = white_placements & 1
-        if(last_bit):
+        if(white_placements & 1):
             total += placement_values[n]
             total += piece_value
         n-=1
@@ -57,8 +72,7 @@ def get_piece_type_total_value(board, piece_type):
 
     n = 0
     while black_placements:
-        last_bit = black_placements & 1
-        if(last_bit):
+        if(black_placements & 1):
             total -= placement_values[n]
             total -= piece_value
         n+=1
@@ -67,8 +81,8 @@ def get_piece_type_total_value(board, piece_type):
     return total
 
 
-piece_placement_values = {
-    0:[ 
+piece_placement_values = [
+    [ 
         0,  0,  0,  0,  0,  0,  0,  0,
         50, 50, 50, 50, 50, 50, 50, 50,
         10, 10, 20, 30, 30, 20, 10, 10,
@@ -78,7 +92,7 @@ piece_placement_values = {
         5, 10, 10,-20,-20, 10, 10,  5,
         0,  0,  0,  0,  0,  0,  0,  0
     ],
-    1:[
+    [
         -50,-40,-30,-30,-30,-30,-40,-50,
         -40,-20,  0,  0,  0,  0,-20,-40,
         -30,  0, 10, 15, 15, 10,  0,-30,
@@ -88,7 +102,7 @@ piece_placement_values = {
         -40,-20,  0,  5,  5,  0,-20,-40,
         -50,-40,-30,-30,-30,-30,-40,-50,
     ],
-    2:[
+    [
         -20,-10,-10,-10,-10,-10,-10,-20,
         -10,  0,  0,  0,  0,  0,  0,-10,
         -10,  0,  5, 10, 10,  5,  0,-10,
@@ -98,7 +112,7 @@ piece_placement_values = {
         -10,  5,  0,  0,  0,  0,  5,-10,
         -20,-10,-10,-10,-10,-10,-10,-20,
     ],
-    3:[
+    [
          0,  0,  0,  0,  0,  0,  0,  0,
          5, 10, 10, 10, 10, 10, 10,  5,
         -5,  0,  0,  0,  0,  0,  0, -5,
@@ -108,7 +122,7 @@ piece_placement_values = {
         -5,  0,  0,  0,  0,  0,  0, -5,
          0,  0,  0,  5,  5,  0,  0,  0
     ],
-    4:[
+    [
         -20,-10,-10, -5, -5,-10,-10,-20,
         -10,  0,  0,  0,  0,  0,  0,-10,
         -10,  0,  5,  5,  5,  5,  0,-10,
@@ -118,7 +132,7 @@ piece_placement_values = {
         -10,  0,  5,  0,  0,  0,  0,-10,
         -20,-10,-10, -5, -5,-10,-10,-20
     ],
-    5:[
+    [
         -30,-40,-40,-50,-50,-40,-40,-30,
         -30,-40,-40,-50,-50,-40,-40,-30,
         -30,-40,-40,-50,-50,-40,-40,-30,
@@ -128,7 +142,7 @@ piece_placement_values = {
          20, 20,  0,  0,  0,  0, 20, 20,
          20, 30, 10,  0,  0, 10, 30, 20
     ],
-}
+]
 # https://www.chessprogramming.org/Simplified_Evaluation_Function
 
 piece_values = {
@@ -141,5 +155,6 @@ piece_values = {
 }
 
 # board = chess.Board()
+# board.push(chess.Move.from_uci('e2e4'))
 
-# print(evaluate_board(board), matches)
+# print(evaluate_board(board))
