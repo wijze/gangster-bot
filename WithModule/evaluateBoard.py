@@ -1,10 +1,9 @@
 import chess
 
-matches = 0
-evaluations = {}
+# evaluations = {}
 
 def evaluate_board(board):
-    # global matches
+    # this start on hashing doesn't work yet
 
     # hash_number = board.pawns
     # hash_number ^= board.knights
@@ -14,74 +13,27 @@ def evaluate_board(board):
     # hash_number ^= board.kings
 
     # try:
-    #     matches+=1
     #     return evaluations[hash_number]
     # except: pass
-    # matches-=1
-
-    # balance = 0
-
-    # balance += get_piece_type_total_value(board, 0)
-    # balance += get_piece_type_total_value(board, 1)
-    # balance += get_piece_type_total_value(board, 2)
-    # balance += get_piece_type_total_value(board, 3)
-    # balance += get_piece_type_total_value(board, 4)
-    # balance += get_piece_type_total_value(board, 5)
-    
-    # # evaluations[hash_number] = balance
-    # return balance
 
     pieces_array = [board.pawns, board.knights, board.bishops, board.rooks, board.queens, board.kings]
     total = 0
 
     for i in range(6):
         ocuppied = board.occupied_co[chess.WHITE]
-        n = 1
-        m=0
-        while m <= 63:
-            relevant_bit = pieces_array[i] & n
-            if relevant_bit & ocuppied:
-                total += piece_placement_values[i][63-m]
-                total += piece_values[i]
-            elif relevant_bit:
-                total -= piece_placement_values[i][m]
-                total -= piece_values[i]
-            n*=2
-            m+=1
+
+        for j, c in enumerate(bin(pieces_array[i])[:1:-1], 0): # j: position, c: value
+            if c == '1': # is there a piece
+                if ocuppied & 2**j: # white
+                    total += piece_placement_values[i][63-j]
+                    total += piece_values[i]
+                else: # black
+                    total -= piece_placement_values[i][j]
+                    total -= piece_values[i]
+        # https://stackoverflow.com/questions/49592295/getting-the-position-of-1-bits-in-a-python-long-object
+
+    # evaluations[hash_number] = total
     
-    return total
-
-def get_piece_type_total_value(board, piece_type):
-    total = 0
-
-    placement_values = piece_placement_values[piece_type]
-    piece_value = piece_values[piece_type]
-    if piece_type==0: placements=board.pawns
-    elif piece_type==1: placements=board.knights
-    elif piece_type==2: placements=board.bishops
-    elif piece_type==3: placements=board.rooks
-    elif piece_type==4: placements=board.queens
-    elif piece_type==5: placements=board.kings
-
-    white_placements = placements & board.occupied_co[chess.WHITE]
-    black_placements = placements & board.occupied_co[chess.BLACK]
-
-    n = 63
-    while white_placements:
-        if(white_placements & 1):
-            total += placement_values[n]
-            total += piece_value
-        n-=1
-        white_placements >>= 1
-
-    n = 0
-    while black_placements:
-        if(black_placements & 1):
-            total -= placement_values[n]
-            total -= piece_value
-        n+=1
-        black_placements >>= 1
-
     return total
 
 
@@ -159,15 +111,12 @@ piece_values = {
 }
 
 
-board = chess.Board()
-def perf(n=10000):
-    for i in range(n):
-        evaluate_board(board)
+# board = chess.Board()
+# def perf(n=10000):
+#     for i in range(n):
+#         evaluate_board(board)
 
-import cProfile
-cProfile.run('perf()')
+# import cProfile
+# cProfile.run('perf()')
 
-print(evaluate_board(board))
-
-# 675ms new
-# 370ms old
+# print(evaluate_board(board))
