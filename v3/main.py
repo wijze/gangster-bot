@@ -1,10 +1,13 @@
 import chess
 
 from window import Window
+from ai import Agent
 
 class Main(Window):
     def __init__(self):
         self.board = chess.Board()
+        self.player_turn = True
+        self.ai = Agent()
 
         super().__init__()
 
@@ -19,11 +22,10 @@ class Main(Window):
                 chess.square(self.first_square[0], self.first_square[1]), 
                 chess.square(coordinates[0], coordinates[1])
             )
-            if move in self.board.legal_moves:
+            if move in self.board.legal_moves and self.player_turn:
                 self.board.push(move)
+                self.player_turn = False
                 # ai move here, planning to rewrite the ai
-            else:
-                print("warning: illegal move")
             self.first_square = None
         else:
             self.first_square = coordinates
