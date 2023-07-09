@@ -22,6 +22,7 @@ class User(Player):
             )
             if self.make_move(move):
                 self.turn = False
+                return True
 
 
 class AI(Player):
@@ -41,3 +42,10 @@ class First_move_AI(Player):
         super().request_move(board)
         self.make_move(list(board.legal_moves)[0])
         self.turn = False
+
+from random import randint
+class Random_AI(Player):
+    def request_move(self, board):
+        super().request_move(board)
+        moves = list(board.legal_moves)
+        self.make_move(moves[randint(0, len(moves)-1)])

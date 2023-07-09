@@ -66,7 +66,6 @@ class Window():
         square_y = math.floor(event.y / self.square_size)
         coordinates = (square_x, 7-square_y)
         if self.first_square:
-            print("user attempted to move")
             self.handle_user_move((self.first_square, coordinates))
             self.first_square = None
         else:
