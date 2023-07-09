@@ -14,8 +14,8 @@ def getpieces(board):
     return returnMap
 
 class Window():
-    def __init__(self, handle_user_move):
-        self.handle_user_move = handle_user_move
+    def __init__(self, user_move_que):
+        self.user_move_que = user_move_que
 
         self.running = True
 
@@ -38,11 +38,12 @@ class Window():
         self.canvas.pack()
         self.canvas.bind("<Button-1>", self.onclick)
 
-    def update(self, new_board):
-        self.board = new_board
+    def update(self, new_board=None):
+        self.canvas.delete("all")
+        if new_board:
+            self.board = new_board
         self.drawBoard()
-        if(new_board):
-            self.draw_pieces(getpieces(self.board))
+        self.draw_pieces(getpieces(self.board))
         self.root.update()
     
     def drawBoard(self):
@@ -66,7 +67,7 @@ class Window():
         square_y = math.floor(event.y / self.square_size)
         coordinates = (square_x, 7-square_y)
         if self.first_square:
-            self.handle_user_move((self.first_square, coordinates))
+            self.user_move_que.put_nowait((self.first_square, coordinates))
             self.first_square = None
         else:
             self.first_square = coordinates
