@@ -7,6 +7,13 @@ from multiprocessing import Process, Queue
 from queue import Empty
 from time import sleep
 
+def get_results_formatted(results_array):
+    result = ""
+    result += "white: " + str(results_array.count("white")) + "\n"
+    result += "black: " + str(results_array.count("black")) + "\n"
+    result += "draw: " + str(results_array.count("draw")) + "\n"
+    return result
+
 class Main():
     def __init__(self, n_games):
         self.results = []
@@ -42,13 +49,21 @@ class Main():
             elif self.update_board_qeue.empty(): 
                 self.window.update()
     
+    def start_games_loop(self):
+        while self.n_games_left > 0:
+            print("new game", self.n_games_left, "games left after this")
+            self.start_new_game()
+        print("\n", get_results_formatted(self.results), "\n", self.results)
+
+
     def start_new_game(self):
         self.n_games_left-=1
-        print("new game", self.n_games_left, "games left after this")
         self.game = Game()
         self.update_board_qeue.put_nowait(self.game.board)
+        self.black_player.turn = False
+        self.white_player.turn = False
         while not self.game.is_over:
-            sleep(0.03)
+            # sleep(0.5)
             if(self.game.white_turn):
                 self.white_player.request_move(self.game.board)
             else:
@@ -60,22 +75,16 @@ class Main():
     def end_game(self):
         self.results.append(self.game.outcome)
         print("game outcome: ", self.game.outcome)
-        if self.n_games_left > 0:
-            self.black_player.turn = False
-            self.white_player.turn = False
-            self.start_new_game()
-        else: 
-            print(self.results)
 
-
-def main():
+def main(window = True):
     m = Main(1)
     m.set_players(
-        Random_AI(m, None),
-        First_move_AI(m, Search_settings())
+        User(m, None),
+        AI(m, Search_settings())
     )
-    m.open_window()
-    m.start_new_game()
+    if window:
+        m.open_window()
+    m.start_games_loop()
 
 if __name__ == '__main__':
-    main()
+    main(True)

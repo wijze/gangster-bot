@@ -34,10 +34,10 @@ class AI(Player):
 
     def request_move(self, board):
         if self.turn: return
-        super().request_move()
-        self.search.start_search() # blocks execution until done
+        super().request_move(board)
+        self.search.start_search(board) # blocks execution until done
 
-        self.main_instance.make_move(self.search.current_best_move)
+        self.main_instance.make_move(self.search.best_move)
         self.turn = False
 
 class First_move_AI(Player):

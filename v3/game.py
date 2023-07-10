@@ -8,20 +8,23 @@ class Game():
         self.outcome = None
 
     def check_if_ended(self):
-        if (len(list(self.board.legal_moves))) == 0:
+        if self.board.is_checkmate():
             self.is_over = True
-            if not self.board.is_checkmate: 
-                self.outcome = "draw"
+            if(self.white_turn):
+                self.outcome = "black"
             else:
-                if(self.white_turn):
-                    self.outcome = "black"
-                else:
-                    self.outcome = "white"
+                self.outcome = "white"
+        elif self.board.can_claim_draw() or self.board.is_game_over():
+            self.is_over = True
+            self.outcome = "draw"
+
     
     def make_move(self, move):
-        if move in self.board.legal_moves:
+        if move in list(self.board.legal_moves):
             self.board.push(move)
             self.white_turn = not self.white_turn
             self.check_if_ended()
             return True
-        else: return False
+        else: 
+            print("illegal: tried: ", move, ", legal moves are: ", list(self.board.legal_moves))
+            return False
