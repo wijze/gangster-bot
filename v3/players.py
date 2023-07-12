@@ -10,6 +10,7 @@ class Player:
         self.turn = True
 
     def user_move(self, move): pass
+    def close(self): pass
 
 
 import chess
@@ -58,11 +59,18 @@ class Random_AI(Player):
 
 import os, chess.engine
 stockfish_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stockfish-windows-x86-64-modern.exe")
-stockfish = chess.engine.SimpleEngine.popen_uci(stockfish_path)
+
 class Stockfish(Player):
+    def __init__(self, main_instance, settings) -> None:
+        super().__init__(main_instance, settings)
+        self.engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
+
     def request_move(self, board):
         if self.turn: return
         super().request_move(board)
-        move = stockfish.analyse(board, chess.engine.Limit(time=1))["pv"][0]
+        move = self.engine.analyse(board, chess.engine.Limit(time=1))["pv"][0]
         self.main_instance.make_move(move)
         self.turn = False
+
+    def close(self):
+        self.engine.close() # otherwise it would keep being in the background

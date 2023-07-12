@@ -39,6 +39,7 @@ class Window():
         self.canvas.bind("<Button-1>", self.onclick)
 
     def update(self, new_board=None):
+        if not self.running: return
         self.canvas.delete("all")
         if new_board:
             self.board = new_board
@@ -74,3 +75,4 @@ class Window():
 
     def exitProgram(self):
         self.running = False
+        self.root.destroy()

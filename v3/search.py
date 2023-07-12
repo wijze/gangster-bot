@@ -1,5 +1,7 @@
 from multiprocessing import Process
 from time import sleep
+from random import shuffle
+import chess
 
 from evaluateBoard import evaluate_board
 
@@ -7,7 +9,7 @@ class Search:
 	def __init__(self, settings) -> None:
 		self.settings = settings
 		self.best_move = None
-		# self.current_best_evaluation = -self.settings.matings_score
+		self.best_evaluation = -self.settings.matings_score
 		self.board = None
 		self.search_ended = False
 	
@@ -30,50 +32,68 @@ class Search:
 	def iterative_deepening_search(self, target_depth):
 		for current_depth in range(target_depth):
 			if self.search_ended: break
-			self.current_best_move = self.search(current_depth)
+			self.search(current_depth)
 
 	
 	def search(self, depth, alpha, beta):
 		# time is over
-		if self.search_ended:
+		# if self.search_ended:
+		# 	return -self.settings.matings_score
+		
+		# check for mate or draw
+		if(self.board.is_checkmate()):
 			return -self.settings.matings_score
-
-		# check for repetition
+		elif self.board.can_claim_draw() or self.board.is_game_over():
+			return self.settings.draw_score
 		# check for transposition
 
 		if depth == 0:
-			# return self.capture_and_check_only_search()
-			# just return evaluation of position for now
-			if self.board.turn:
-				return evaluate_board(self.board)
-			else:
-				return - evaluate_board(self.board)
+			return self.not_quiet_search(alpha, beta)
 
-		moves = self.board.legal_moves
 		best_move = None
-		if len(list(moves)) == 0:
-			if(self.board.is_checkmate()):
-				return -self.settings.matings_score
-			else:
-				return 0 # draw
-		# order moves
+		best_eval = -self.settings.matings_score
+		moves = list(self.board.legal_moves)
+		shuffle(moves)
 
 		for move in moves:
 			self.board.push(move)
-			eval = -self.search(depth-1, -beta, -alpha)
+			# print("start, normal, depth:",depth, "move:", move)
+			evaluation = -self.search(depth-1, -beta, -alpha)
+			# print("end, normal, depth:",depth, "move:", move, "eval:",evaluation)
 			self.board.pop()
-			if eval >= beta:
+			if evaluation >= beta:
 				# store eval in transposition table
 				return beta # pruned (move was to good)
-			if eval > alpha:
-				alpha = eval
+			if evaluation > alpha:
+				alpha = evaluation
 				best_move = move
-				# print("found better move: eval=", eval)
+				best_eval = evaluation
 
 		self.best_move = best_move
+		self.best_evaluation = best_eval
 		# store eval in transposition table
 		return alpha
 		
-	def capture_and_check_only_search():
-		return 
-		# returns evaluation after having searched checks and captures to reach a quiet position
+	# returns evaluation after having searched checks and captures to reach a quiet position
+	def not_quiet_search(self, alpha, beta, depth=0):
+		if depth>self.settings.capture_search_depth: return beta # TODO come up with a better solution 
+		if self.board.turn: evaluation = evaluate_board(self.board)
+		else: evaluation = - evaluate_board(self.board)
+
+		if evaluation > beta: return beta # this position won't be reached because it's to good
+		if evaluation > alpha: alpha = evaluation
+
+		# generate not quiet moves (captures etc)
+		moves = list(self.board.generate_legal_moves(chess.BB_ALL, self.board.occupied_co[not self.board.turn]))
+
+		for move in moves:
+			self.board.push(move)
+			# print("start, extended, depth:",depth, "move:", move)
+			evaluation = -self.not_quiet_search(-beta, -alpha, depth+1)
+			# print("end, extended, depth:",depth, "move:", move, "eval:",evaluation)
+			self.board.pop()
+
+			if evaluation > beta: return beta
+			if evaluation > alpha: alpha = evaluation
+		
+		return alpha

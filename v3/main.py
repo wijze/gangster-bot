@@ -53,8 +53,11 @@ class Main():
         while self.n_games_left > 0:
             print("new game", self.n_games_left, "games left after this")
             self.start_new_game()
-        print("\n", get_results_formatted(self.results), "\n", self.results)
-
+        
+        # finished
+        print("\n", self.results, "\n", get_results_formatted(self.results) )
+        self.white_player.close()
+        self.black_player.close()
 
     def start_new_game(self):
         self.n_games_left-=1
@@ -63,28 +66,30 @@ class Main():
         self.black_player.turn = False
         self.white_player.turn = False
         while not self.game.is_over:
-            # sleep(0.5)
             if(self.game.white_turn):
                 self.white_player.request_move(self.game.board)
             else:
                 self.black_player.request_move(self.game.board)
             self.handle_user_move()
             self.update_board_qeue.put_nowait(self.game.board)
+            sleep(0.3)
         self.end_game()
     
     def end_game(self):
         self.results.append(self.game.outcome)
         print("game outcome: ", self.game.outcome)
 
+
 def main(window = True):
-    m = Main(1)
+    m = Main(10)
     m.set_players(
-        User(m, None),
-        AI(m, Search_settings())
+        AI(m, Search_settings(depth=2)),
+        AI(m, Search_settings(depth=2))
     )
     if window:
         m.open_window()
     m.start_games_loop()
+
 
 if __name__ == '__main__':
     main(True)
