@@ -4,7 +4,6 @@ from search_settings import Search_settings
 from game import Game
 
 from multiprocessing import Process, Queue
-from queue import Empty
 from time import sleep
 
 def get_results_formatted(results_array):
@@ -14,13 +13,24 @@ def get_results_formatted(results_array):
     result += "draw: " + str(results_array.count("draw")) + "\n"
     return result
 
+class Settings:
+    def __init__(self, n_games=1, wait_time=0.5) -> None:
+        self.wait_time = wait_time
+        self.n_games = n_games
+        self.print_turns = False
+        self.print_moves = False
+        self.print_raw_results = True
+        self.open_window = True
+
 class Main():
-    def __init__(self, n_games):
+    def __init__(self, settings):
+        self.settings = settings
         self.results = []
-        self.n_games_left = n_games
+        self.n_games_left = settings.n_games
         self.game = Game() # temporary game for display
         self.update_board_qeue = Queue()
         self.user_move_qeue = Queue()
+        if self.settings.open_window: self.open_window()
 
     def set_players(self, player1, player2):
         self.white_player = player1
@@ -33,6 +43,9 @@ class Main():
     def make_move(self, move): # players can call this to make a move
         if not self.game.make_move(move): 
             return False # move was illegal
+        else: 
+            if self.settings.print_moves: print(move)
+            if self.settings.print_turns: print("white:" if self.game.white_turn else "black:")
 
     def handle_user_move(self): # is called when an user finishes a move
         if not self.user_move_qeue.empty():
@@ -55,7 +68,9 @@ class Main():
             self.start_new_game()
         
         # finished
-        print("\n", self.results, "\n", get_results_formatted(self.results) )
+        print("\n")
+        if self.settings.print_raw_results: print(self.results)
+        print(get_results_formatted(self.results))
         self.white_player.close()
         self.black_player.close()
 
@@ -72,7 +87,7 @@ class Main():
                 self.black_player.request_move(self.game.board)
             self.handle_user_move()
             self.update_board_qeue.put_nowait(self.game.board)
-            sleep(0.3)
+            sleep(self.settings.wait_time)
         self.end_game()
     
     def end_game(self):
@@ -80,14 +95,12 @@ class Main():
         print("game outcome: ", self.game.outcome)
 
 
-def main(window = True):
-    m = Main(10)
+def main():
+    m = Main(Settings(n_games=1))
     m.set_players(
         AI(m, Search_settings(depth=2)),
         AI(m, Search_settings(depth=2))
     )
-    if window:
-        m.open_window()
     m.start_games_loop()
 
 
