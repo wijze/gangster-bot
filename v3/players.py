@@ -36,6 +36,7 @@ class AI(Player):
         if self.turn: return
         super().request_move(board)
         self.search.start_search(board) # blocks execution until done
+        # print("evaluated: ", self.search.best_evaluation, board.turn)
 
         self.main_instance.make_move(self.search.best_move)
         self.turn = False
@@ -53,4 +54,15 @@ class Random_AI(Player):
         super().request_move(board)
         moves = list(board.legal_moves)
         self.main_instance.make_move(moves[randint(0, len(moves)-1)])
+        self.turn = False
+
+import os, chess.engine
+stockfish_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stockfish-windows-x86-64-modern.exe")
+stockfish = chess.engine.SimpleEngine.popen_uci(stockfish_path)
+class Stockfish(Player):
+    def request_move(self, board):
+        if self.turn: return
+        super().request_move(board)
+        move = stockfish.analyse(board, chess.engine.Limit(time=1))["pv"][0]
+        self.main_instance.make_move(move)
         self.turn = False
