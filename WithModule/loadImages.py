@@ -3,11 +3,8 @@ import os.path
 
 def loadImages():
     script_path = os.path.realpath(__file__)
-    print(script_path)
     script_dir = os.path.dirname(script_path)
-    print(script_dir)
     images_dir = os.path.join(script_dir, '..', 'chess_images')
-    print(images_dir)
 
     return {
         "R":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "wR.png"))),
