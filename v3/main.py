@@ -3,7 +3,7 @@ from players import *
 from search_settings import Search_settings
 from game import Game
 
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Pool
 from time import sleep
 
 def get_results_formatted(results_array):
@@ -14,13 +14,30 @@ def get_results_formatted(results_array):
     return result
 
 class Settings:
-    def __init__(self, n_games=1, wait_time=0.5) -> None:
+    def __init__(self, n_games=1, wait_time=0.5, parralel_simulations=1) -> None:
         self.wait_time = wait_time
         self.n_games = n_games
+
         self.print_turns = False
         self.print_moves = False
+
         self.print_raw_results = True
+
         self.open_window = True
+
+        self.n_parallel_simulations = parralel_simulations
+        self.parallel_simulating = parralel_simulations > 1
+        if self.parallel_simulating: self.open_window = False # TODO maybe change
+
+class Simulating_settings(Settings):
+    def __init__(self) -> None:
+        super().__init__(1000, 0, 10)
+class Debug_settings(Settings):
+    def __init__(self) -> None:
+        super().__init__(1, 0.5, 1)
+        self.print_moves = True
+
+# TODO maybe add settings to game
 
 class Main():
     def __init__(self, settings):
@@ -40,17 +57,17 @@ class Main():
         self.drawing_process = Process(target=self.display_loop)
         self.drawing_process.start()
 
-    def make_move(self, move): # players can call this to make a move
-        if not self.game.make_move(move): 
+    def make_move(self, game, move): # players can call this to make a move
+        if not game.make_move(move): 
             return False # move was illegal
         else: 
             if self.settings.print_moves: print(move)
             if self.settings.print_turns: print("white:" if self.game.white_turn else "black:")
 
-    def handle_user_move(self): # is called when an user finishes a move
+    def handle_user_move(self):
         if not self.user_move_qeue.empty():
             move = self.user_move_qeue.get_nowait()
-            if not self.white_player.user_move(move):
+            if not self.white_player.user_move(move): #attempt fails
                 self.black_player.user_move(move)
     
     def display_loop(self): # updates the display
@@ -63,9 +80,14 @@ class Main():
                 self.window.update()
     
     def start_games_loop(self):
-        while self.n_games_left > 0:
-            print("new game", self.n_games_left, "games left after this")
-            self.start_new_game()
+        if self.settings.parallel_simulating:
+            pool = Pool(processes=self.settings.parralel_simulations)
+            self.results = pool.map(self.start_new_game, range(self.settings.n_games))
+            pool.close()
+            pool.join()
+        else:
+            for i in range(self.settings.n_games):
+                self.start_new_game(i)
         
         # finished
         print("\n")
@@ -74,35 +96,32 @@ class Main():
         self.white_player.close()
         self.black_player.close()
 
-    def start_new_game(self):
-        self.n_games_left-=1
-        self.game = Game()
-        self.update_board_qeue.put_nowait(self.game.board)
+    def start_new_game(self, n_game):
+        print("new game", self.settings.n_games - n_game, "games left after this")
+        game = Game()
+        self.update_board_qeue.put_nowait(game.board)
+
         self.black_player.turn = False
         self.white_player.turn = False
-        while not self.game.is_over:
-            if(self.game.white_turn):
-                self.white_player.request_move(self.game.board)
+        while not game.is_over:
+            if(game.white_turn):
+                self.white_player.request_move(game)
             else:
-                self.black_player.request_move(self.game.board)
+                self.black_player.request_move(game)
             self.handle_user_move()
-            self.update_board_qeue.put_nowait(self.game.board)
+            self.update_board_qeue.put_nowait(game.board)
             sleep(self.settings.wait_time)
-        self.end_game()
-    
-    def end_game(self):
-        self.results.append(self.game.outcome)
-        print("game outcome: ", self.game.outcome)
-
+        print("game outcome: ", game.outcome)
+        
 
 def main():
-    m = Main(Settings(n_games=1))
+    m = Main(Debug_settings())
     m.set_players(
-        AI(m, Search_settings(depth=2)),
-        AI(m, Search_settings(depth=2))
+        User(),
+        AI(Search_settings(depth=2))
     )
     m.start_games_loop()
 
 
 if __name__ == '__main__':
-    main(True)
+    main()
