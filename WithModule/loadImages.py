@@ -1,18 +1,26 @@
 from PIL import ImageTk, Image
-import pathlib
+import os.path
 
 def loadImages():
+    script_path = os.path.realpath(__file__)
+    print(script_path)
+    script_dir = os.path.dirname(script_path)
+    print(script_dir)
+    images_dir = os.path.join(script_dir, '..', 'chess_images')
+    print(images_dir)
+
     return {
-        "R":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/wR.png"))),
-        "N":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/wN.png"))),
-        "B":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/wB.png"))),
-        "Q":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/wQ.png"))),
-        "K":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/wK.png"))),
-        "P":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/wp.png"))),
-        "r":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/bR.png"))),
-        "n":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/bN.png"))),
-        "b":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/bB.png"))),
-        "q":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/bQ.png"))),
-        "k":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/bK.png"))),
-        "p":ImageTk.PhotoImage(Image.open(pathlib.Path("./chess_images/bp.png"))),
+        "R":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "wR.png"))),
+        "N":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "wN.png"))),
+        "B":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "wB.png"))),
+        "Q":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "wQ.png"))),
+        "K":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "wK.png"))),
+        "P":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "wp.png"))),
+        "r":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "bR.png"))),
+        "n":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "bN.png"))),
+        "b":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "bB.png"))),
+        "q":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "bQ.png"))),
+        "k":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "bK.png"))),
+        "p":ImageTk.PhotoImage(Image.open(os.path.join(images_dir, "bp.png"))),
     }
+    
