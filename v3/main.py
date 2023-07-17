@@ -30,11 +30,12 @@ class Settings:
         if self.parallel_simulating: self.open_window = False # TODO maybe change
 
 class Simulating_settings(Settings):
-    def __init__(self) -> None:
-        super().__init__(1000, 0, 10)
+    def __init__(self, n_games=1000, parralel_simulations=5) -> None:
+        if parralel_simulations > 20: parralel_simulations = 20 # can't handle to many
+        super().__init__(n_games, 0, parralel_simulations)
 class Debug_settings(Settings):
-    def __init__(self) -> None:
-        super().__init__(1, 0.5, 1)
+    def __init__(self, n_games) -> None:
+        super().__init__(n_games, 0.5, 1)
         self.print_moves = True
 
 # TODO maybe add settings to game
@@ -45,8 +46,9 @@ class Main():
         self.results = []
         self.n_games_left = settings.n_games
         self.game = Game() # temporary game for display
-        self.update_board_qeue = Queue()
-        self.user_move_qeue = Queue()
+        if not self.settings.parallel_simulating:
+            self.update_board_qeue = Queue()
+            self.user_move_qeue = Queue()
         if self.settings.open_window: self.open_window()
 
     def set_players(self, player1, player2):
@@ -81,13 +83,13 @@ class Main():
     
     def start_games_loop(self):
         if self.settings.parallel_simulating:
-            pool = Pool(processes=self.settings.parralel_simulations)
+            pool = Pool(processes = self.settings.n_parallel_simulations)
             self.results = pool.map(self.start_new_game, range(self.settings.n_games))
             pool.close()
             pool.join()
         else:
             for i in range(self.settings.n_games):
-                self.start_new_game(i)
+                self.results.append(self.start_new_game(i))
         
         # finished
         print("\n")
@@ -99,7 +101,8 @@ class Main():
     def start_new_game(self, n_game):
         print("new game", self.settings.n_games - n_game, "games left after this")
         game = Game()
-        self.update_board_qeue.put_nowait(game.board)
+        if not self.settings.parallel_simulating:
+            self.update_board_qeue.put_nowait(game.board)
 
         self.black_player.turn = False
         self.white_player.turn = False
@@ -108,16 +111,19 @@ class Main():
                 self.white_player.request_move(game)
             else:
                 self.black_player.request_move(game)
-            self.handle_user_move()
-            self.update_board_qeue.put_nowait(game.board)
+            if not self.settings.parallel_simulating:
+                self.handle_user_move()
+            if not self.settings.parallel_simulating:
+                self.update_board_qeue.put_nowait(game.board)
             sleep(self.settings.wait_time)
         print("game outcome: ", game.outcome)
+        return game.outcome
         
 
 def main():
-    m = Main(Debug_settings())
+    m = Main(Debug_settings(n_games=1))
     m.set_players(
-        User(),
+        AI(Search_settings(depth=2)),
         AI(Search_settings(depth=2))
     )
     m.start_games_loop()
