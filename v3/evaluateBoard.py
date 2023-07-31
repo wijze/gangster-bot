@@ -3,6 +3,10 @@ import chess
 # evaluations = {}
 
 def evaluate_board(board):
+
+    # For possible fix of hashproblem, this video on Zobrish Hashing:
+    # https://www.youtube.com/watch?v=QYNRvMolN20&pp=ygUPem9icmlzdCBoYXNnaGlu
+    
     # this start on hashing doesn't work yet
 
     # hash_number = board.pawns
