@@ -3,7 +3,7 @@ from time import sleep
 from random import shuffle
 import chess
 
-from evaluateBoard import evaluate_board
+from evaluateBoard import evaluate_board, get_material_balance
 
 class Search:
 	def __init__(self, settings) -> None:
@@ -48,6 +48,9 @@ class Search:
 		# check for transposition
 
 		if depth == 0:
+			# if self.board.turn: evaluation = get_material_balance(self.board)
+			# else: evaluation = - get_material_balance(self.board)
+			# return evaluation
 			return self.not_quiet_search(alpha, beta)
 
 		best_move = None

@@ -131,7 +131,7 @@ class Main():
         
 
 def main():
-    m = Main(Debug_settings())
+    m = Main(Simulating_settings(n_games=5000, parralel_simulations=20, print_games_left_every=50))
     m.set_players(
         AI(Search_settings(depth=2)),
         AI(Search_settings(depth=2))

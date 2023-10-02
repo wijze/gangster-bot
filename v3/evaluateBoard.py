@@ -40,6 +40,22 @@ def evaluate_board(board):
     
     return total
 
+# just for testing
+def get_material_balance(board):
+    balance = 0
+
+    balance += 1* bin(board.pawns & board.occupied_co[chess.WHITE]).count('1')
+    balance += -1* bin(board.pawns & board.occupied_co[chess.BLACK]).count('1')
+    balance += 3* bin(board.knights & board.occupied_co[chess.WHITE]).count('1')
+    balance += -3* bin(board.knights & board.occupied_co[chess.BLACK]).count('1')
+    balance += 3* bin(board.bishops & board.occupied_co[chess.WHITE]).count('1')
+    balance += -3* bin(board.bishops & board.occupied_co[chess.BLACK]).count('1')
+    balance += 5* bin(board.rooks & board.occupied_co[chess.WHITE]).count('1')
+    balance += -5* bin(board.rooks & board.occupied_co[chess.BLACK]).count('1')
+    balance += 9* bin(board.queens & board.occupied_co[chess.WHITE]).count('1')
+    balance += -9* bin(board.queens & board.occupied_co[chess.BLACK]).count('1')
+
+    return balance
 
 piece_placement_values = [
     [ 
