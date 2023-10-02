@@ -1,7 +1,7 @@
 import math
 
 import tkinter as tk
-from chess import square
+from chess import square, Board
 
 from loadImages import loadImages
 
@@ -25,7 +25,7 @@ class Window():
         self.marked_squares = []
         self.first_square = None
 
-        self.board = None
+        self.board = Board()
         self.first_square = None
 
         self.root = tk.Tk()

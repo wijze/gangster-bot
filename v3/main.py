@@ -14,12 +14,15 @@ def get_results_formatted(results_array):
     return result
 
 class Settings:
-    def __init__(self, n_games=1, wait_time=0.5, parralel_simulations=1) -> None:
+    def __init__(self, n_games=1, wait_time=0, parralel_simulations=1, print_individual_results=False, print_games_left_every=1) -> None:
         self.wait_time = wait_time
         self.n_games = n_games
 
         self.print_turns = False
         self.print_moves = False
+
+        self.print_games_left_every = print_games_left_every
+        self.print_individual_results = print_individual_results
 
         self.print_raw_results = True
 
@@ -30,13 +33,18 @@ class Settings:
         if self.parallel_simulating: self.open_window = False # TODO maybe change
 
 class Simulating_settings(Settings):
-    def __init__(self, n_games=1000, parralel_simulations=5) -> None:
+    def __init__(self, n_games=100, parralel_simulations=5, print_games_left_every=10) -> None:
         if parralel_simulations > 20: parralel_simulations = 20 # can't handle to many
         super().__init__(n_games, 0, parralel_simulations)
+        self.open_window = False
+        self.print_individual_results = False
+        self.print_games_left_every = print_games_left_every
+        
 class Debug_settings(Settings):
-    def __init__(self, n_games) -> None:
+    def __init__(self, n_games=1, wait_time=0.5, print_moves = True) -> None:
         super().__init__(n_games, 0.5, 1)
-        self.print_moves = True
+        self.print_moves = print_moves
+        self.wait_time = wait_time
 
 # TODO maybe add settings to game
 
@@ -99,7 +107,8 @@ class Main():
         self.black_player.close()
 
     def start_new_game(self, n_game):
-        print("new game", self.settings.n_games - n_game, "games left after this")
+        if n_game % self.settings.print_games_left_every == 0:
+            print("new game", self.settings.n_games - n_game, "games left after this")
         game = Game()
         if not self.settings.parallel_simulating:
             self.update_board_qeue.put_nowait(game.board)
@@ -116,12 +125,13 @@ class Main():
             if not self.settings.parallel_simulating:
                 self.update_board_qeue.put_nowait(game.board)
             sleep(self.settings.wait_time)
-        print("game outcome: ", game.outcome)
+        if self.settings.print_individual_results:
+            print("game outcome: ", game.outcome)
         return game.outcome
         
 
 def main():
-    m = Main(Debug_settings(n_games=1))
+    m = Main(Debug_settings())
     m.set_players(
         AI(Search_settings(depth=2)),
         AI(Search_settings(depth=2))

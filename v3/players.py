@@ -61,14 +61,14 @@ import os, chess.engine
 stockfish_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stockfish-windows-x86-64-modern.exe")
 
 class Stockfish(Player):
-    def __init__(self, main_instance, settings) -> None:
-        super().__init__(main_instance, settings)
+    def __init__(self, settings) -> None:
+        super().__init__(settings)
         self.engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
 
     def request_move(self, game):
         if self.turn: return
         super().request_move(game)
-        move = self.engine.analyse(game.board, chess.engine.Limit(time=1))["pv"][0]
+        move = self.engine.analyse(game.board, chess.engine.Limit(time=self.settings.time_limit))["pv"][0]
         self.game.make_move(move)
         self.turn = False
 
