@@ -26,5 +26,4 @@ class Game():
             self.check_if_ended()
             return True
         else: 
-            print("illegal: tried: ", move, ", legal moves are: ", list(self.board.legal_moves))
-            return False
+            raise chess.IllegalMoveError()

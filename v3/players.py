@@ -17,15 +17,30 @@ import chess
 class User(Player):
     def request_move(self, game):
         super().request_move(game)
-    def user_move(self, move):
+    def user_move(self, move_attempt):
         if self.turn:
             move = chess.Move(
-                chess.square(move[0][0],move[0][1]),
-                chess.square(move[1][0],move[1][1])
+                chess.square(move_attempt[0][0],move_attempt[0][1]),
+                chess.square(move_attempt[1][0],move_attempt[1][1]),
             )
-            if self.game.make_move(move):
-                self.turn = False
-                return True
+            
+            # could be better but works
+            try:
+                self.game.make_move(move)
+            except:
+                try:
+                    promotion = chess.Move(
+                        chess.square(move_attempt[0][0],move_attempt[0][1]),
+                        chess.square(move_attempt[1][0],move_attempt[1][1]),
+                        promotion=chess.QUEEN
+                    )
+                    self.game.make_move(promotion)
+                except:
+                    print("illegal move")
+                    return False
+            self.turn = False
+            return True
+                
 
 
 class AI(Player):
