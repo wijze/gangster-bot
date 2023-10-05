@@ -154,8 +154,11 @@ class Main:
 
 
 def main():
-    m = Main(Debug_settings(n_games=10, wait_time=0.05))
-    m.set_players(AI(Search_settings(depth=2)), AI(Search_settings(depth=2)))
+    m = Main(Debug_settings())
+    m.set_players(
+        First_move_AI(), 
+        AI(Search_settings(depth=1)),
+    )
     m.start_games_loop()
 
 

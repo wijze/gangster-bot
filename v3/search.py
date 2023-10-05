@@ -1,7 +1,8 @@
 from multiprocessing import Process
 from time import sleep
-
 from itertools import chain
+from random import shuffle
+
 import chess
 
 from evaluateBoard import evaluate_board, get_material_balance
@@ -58,17 +59,35 @@ class Search:
             # if self.board.turn: evaluation = get_material_balance(self.board)
             # else: evaluation = - get_material_balance(self.board)
             # return evaluation
-            return self.not_quiet_search(alpha, beta)
+            if self.settings.capture_search:
+                return self.not_quiet_search(alpha, beta)
+            elif self.settings.evaluation_type == "both":
+                if self.board.turn:
+                    evaluation = evaluate_board(self.board)
+                else:
+                    evaluation = -evaluate_board(self.board)
+            else:
+                if self.board.turn:
+                    evaluation = get_material_balance(self.board)
+                else:
+                    evaluation = -get_material_balance(self.board)
+            return evaluation
 
         best_move = None
         best_eval = -self.settings.matings_score
 
-        for move in chain(
+        if self.settings.random_order:
+            moves = list(self.board.generate_legal_moves())
+            shuffle(moves)
+        else:
+            moves = chain(
             self.board.generate_legal_moves(
                 chess.BB_ALL, self.board.occupied_co[not self.board.turn]
             ),
             self.board.generate_legal_moves(chess.BB_ALL, ~self.board.occupied),
-        ):
+        )
+
+        for move in moves:
             self.board.push(move)
             # print("start, normal, depth:",depth, "move:", move)
             evaluation = -self.search(depth - 1, -beta, -alpha)
