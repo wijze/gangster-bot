@@ -1,7 +1,8 @@
 import chess
 
 class Game():
-    def __init__(self) -> None:
+    def __init__(self, make_move=None) -> None:
+        self.make = make_move
         self.board = chess.Board()
         self.white_turn = True
         self.is_over = False
@@ -22,6 +23,8 @@ class Game():
     def make_move(self, move):
         if move in list(self.board.legal_moves):
             self.board.push(move)
+            if self.make:
+                self.make(move)
             self.white_turn = not self.white_turn
             self.check_if_ended()
             return True

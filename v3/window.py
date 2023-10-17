@@ -24,6 +24,7 @@ class Window():
 
         self.marked_squares = []
         self.first_square = None
+        self.moved_square = None
 
         self.board = Board()
         self.first_square = None
@@ -38,11 +39,13 @@ class Window():
         self.canvas.pack()
         self.canvas.bind("<Button-1>", self.onclick)
 
-    def update(self, new_board=None):
+    def update(self, new_board=None, moved_square=None):
         if not self.running: return
         self.canvas.delete("all")
         if new_board:
             self.board = new_board
+        if moved_square:
+            self.moved_square = moved_square
         self.drawBoard()
         self.draw_pieces(getpieces(self.board))
         self.root.update()
@@ -51,6 +54,7 @@ class Window():
         for row in range (8):
             for column in range (8):
                 if self.first_square==(column,7-row): color = self.colors[2]
+                elif square(column,7-row)==self.moved_square: color = self.colors[3]
                 elif (column,7-row) in self.marked_squares: color = self.colors[3]
                 elif (((row+column)/2)%1) == 0: color = self.colors[0]
                 else: color = self.colors[1]

@@ -87,14 +87,9 @@ class Main:
         self.drawing_process = Process(target=self.display_loop)
         self.drawing_process.start()
 
-    def make_move(self, game, move):  # players can call this to make a move
-        if not game.make_move(move):
-            return False  # move was illegal
-        else:
-            if self.settings.print_moves:
-                print(move)
-            if self.settings.print_turns:
-                print("white:" if self.game.white_turn else "black:")
+    def make_move(self, move):  # players can call this to make a move
+        if not self.settings.parallel_simulating:
+            self.update_board_qeue.put_nowait((None, move.to_square))
 
     def handle_user_move(self):
         if not self.user_move_qeue.empty():
@@ -106,8 +101,8 @@ class Main:
         self.window = Window(self.user_move_qeue)
         while self.window.running:
             if not self.update_board_qeue.empty():
-                updated_board = self.update_board_qeue.get_nowait()
-                self.window.update(updated_board)
+                updated_board, move_square = self.update_board_qeue.get_nowait()
+                self.window.update(updated_board, move_square)
             elif self.update_board_qeue.empty():
                 self.window.update()
 
@@ -132,9 +127,9 @@ class Main:
     def start_new_game(self, n_game):
         if n_game % self.settings.print_games_left_every == 0:
             print("new game", self.settings.n_games - n_game, "games left after this")
-        game = Game()
+        game = Game(self.make_move)
         if not self.settings.parallel_simulating:
-            self.update_board_qeue.put_nowait(game.board)
+            self.update_board_qeue.put_nowait((game.board, None))
 
         self.black_player.turn = False
         self.white_player.turn = False
@@ -146,7 +141,7 @@ class Main:
             if not self.settings.parallel_simulating:
                 self.handle_user_move()
             if not self.settings.parallel_simulating:
-                self.update_board_qeue.put_nowait(game.board)
+                self.update_board_qeue.put_nowait((game.board, None))
             sleep(self.settings.wait_time)
         if self.settings.print_individual_results:
             print("game outcome: ", game.outcome)
@@ -156,7 +151,7 @@ class Main:
 def main():
     m = Main(Debug_settings())
     m.set_players(
-        First_move_AI(), 
+        Random_AI(), 
         AI(Search_settings(depth=1)),
     )
     m.start_games_loop()
