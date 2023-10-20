@@ -9,7 +9,7 @@ class Search_settings:
         self.matings_score = 1000000
         self.draw_score = -200  # we don't like draws
 
-        self.random_order = False # slower if true
+        self.random_order = True # slower if true
 
         # evauluation type does not work with capture search
         self.evaluation_type = "both"

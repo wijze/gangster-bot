@@ -39,9 +39,7 @@ class User(Player):
                     print("illegal move")
                     return False
             self.turn = False
-            return True
-                
-
+            return True         
 
 class AI(Player):
     def __init__(self, settings=None) -> None:
@@ -62,6 +60,20 @@ class First_move_AI(Player):
         super().request_move(game)
         self.game.make_move(list(game.board.legal_moves)[0])
         self.turn = False
+
+class Minimize_legal_moves_AI(Player):
+    def request_move(self, game):
+        best_move = None
+        least_moves = 1000
+        board = game.board
+        for move in board.legal_moves:
+            board.push(move)
+            moves_amount = len(list(board.legal_moves))
+            if moves_amount < least_moves:
+                least_moves = moves_amount
+                best_move = move
+            board.pop()
+        game.make_move(best_move)      
 
 from random import randint
 class Random_AI(Player):
@@ -89,3 +101,16 @@ class Stockfish(Player):
 
     def close(self):
         self.engine.close() # otherwise it would keep being in the background
+
+class Stockfish_procent(Stockfish):
+    def __init__(self, settings, procent) -> None:
+        super().__init__(settings)
+        self.random = Random_AI()
+        self.procent_stockfish = procent
+
+    def request_move(self, game):
+        if randint(1,100) <= self.procent_stockfish:
+            print("stockfish")
+            return super().request_move(game)
+        else:
+            return self.random.request_move(game)
