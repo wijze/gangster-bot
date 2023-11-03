@@ -12,5 +12,6 @@ class Search_settings:
         self.random_order = True # slower if true
 
         # evauluation type does not work with capture search
+        # options: material, both (position+material) (default), legalmoves
         self.evaluation_type = "both"
         self.capture_search = True

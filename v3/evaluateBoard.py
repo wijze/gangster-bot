@@ -40,6 +40,9 @@ def evaluate_board(board):
     
     return total
 
+def get_legal_moves_evaluation(board):
+    return len(list(board.legal_moves))
+
 # just for testing
 def get_material_balance(board):
     balance = 0

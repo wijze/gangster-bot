@@ -5,7 +5,7 @@ from random import shuffle
 
 import chess
 
-from evaluateBoard import evaluate_board, get_material_balance
+from evaluateBoard import evaluate_board, get_material_balance, get_legal_moves_evaluation
 
 
 class Search:
@@ -66,11 +66,17 @@ class Search:
                     evaluation = evaluate_board(self.board)
                 else:
                     evaluation = -evaluate_board(self.board)
-            else:
+            elif self.settings.evaluation_type == "material":
                 if self.board.turn:
                     evaluation = get_material_balance(self.board)
                 else:
                     evaluation = -get_material_balance(self.board)
+            elif self.settings.evaluation_type == "legal moves":
+                if self.board.turn:
+                    evaluation = -get_legal_moves_evaluation(self.board)
+                else:
+                    evaluation = get_legal_moves_evaluation(self.board)
+            else: raise ValueError("invalid evaluation type")
             return evaluation
 
         best_move = None
