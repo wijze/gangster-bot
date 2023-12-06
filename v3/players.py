@@ -36,7 +36,6 @@ class User(Player):
                     )
                     self.game.make_move(promotion)
                 except:
-                    print("illegal move")
                     return False
             self.turn = False
             return True         

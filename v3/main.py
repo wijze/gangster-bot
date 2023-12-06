@@ -58,7 +58,7 @@ class Simulating_settings(Settings):
 
 
 class Debug_settings(Settings):
-    def __init__(self, n_games=1, wait_time=0.5, print_moves=True) -> None:
+    def __init__(self, n_games=1, wait_time=0.5, print_moves=False) -> None:
         super().__init__(n_games, 0.5, 1, print_individual_results=True)
         self.print_moves = print_moves
         self.wait_time = wait_time
@@ -149,12 +149,10 @@ class Main:
 
 
 def main():
-    m = Main(Simulating_settings(n_games=1000, parralel_simulations=20, print_games_left_every=50))
-    # least_move_search_settings = Search_settings(depth=1)
-    # least_move_search_settings.evaluation_type = "legal moves"
+    m = Main(Debug_settings(wait_time=0.1))
     m.set_players(
-        AI(Search_settings(depth=1)), 
-        AI(Search_settings(depth=1)),
+        User(),
+        AI(Search_settings(depth=3)),
     )
     m.start_games_loop()
 
